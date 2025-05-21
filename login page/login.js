@@ -38,7 +38,7 @@ async function login() {
       if (adminType === "camp") {
         window.location.href = "https://ncc-campregistration-l6f6.onrender.com/admin%20page/admin.html";
       } else if (adminType === "enroll") {
-        window.location.href = "https://lpunccwebsite.z29.web.core.windows.net/ADMIN%20PAGE/admin.html";
+        window.location.href = "https://adminpage.z29.web.core.windows.net/";
       }
     } else {
       errorMsg.textContent = data.message || "Login failed.";
