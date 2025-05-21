@@ -1,6 +1,7 @@
 // Clear login session when page loads
 document.addEventListener("DOMContentLoaded", () => {
-  sessionStorage.removeItem("isAdminLoggedIn");
+  // Remove this line:
+  // sessionStorage.removeItem("isAdminLoggedIn");
 
   const loginForm = document.getElementById("loginForm");
   loginForm.addEventListener("submit", async (e) => {
