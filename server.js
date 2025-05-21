@@ -4,20 +4,45 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("express-session");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.static(path.join(__dirname, "login page"))); // Serve frontend
+
+// Prevent caching
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store');
   next();
 });
+
+// Session config
+app.use(session({
+  secret: process.env.SESSION_SECRET || "your-secret-key",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 30, // 30 minutes
+  },
+}));
+
+// Middleware to protect routes
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Unauthorized. Please log in." });
+  }
+  next();
+}
 
 // Default route to load registration page
 app.get("/", (req, res) => {
@@ -59,11 +84,24 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
+    // Save session
     res.status(200).json({ message: "Login successful" });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
+});
+
+
+// Logout route
+app.post("/api/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed" });
+    }
+    res.clearCookie("connect.sid");
+    res.status(200).json({ message: "Logged out successfully" });
+  });
 });
 
 // Add user route - supports multiple admin types
