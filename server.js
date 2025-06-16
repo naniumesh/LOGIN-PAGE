@@ -170,26 +170,6 @@ app.delete("/api/users/:username/:adminType", async (req, res) => {
   }
 });
 
-// PUT /api/users/:username
-app.put('/api/users/:username', async (req, res) => {
-  const oldUsername = req.params.username;
-  const { newUsername, newPassword } = req.body;
-
-  try {
-    const user = await User.findOne({ username: oldUsername });
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    if (newUsername) user.username = newUsername;
-    if (newPassword) user.password = await bcrypt.hash(newPassword, 10); // hash new password
-
-    await user.save();
-    res.json({ message: 'User updated' });
-  } catch (err) {
-    res.status(500).json({ message: 'Update failed', error: err.message });
-  }
-});
-
-
 // Start server
 app.listen(PORT, () => {
   console.log(`Login server is running on http://localhost:${PORT}`);
