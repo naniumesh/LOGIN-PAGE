@@ -10,172 +10,138 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: true,
-  credentials: true,
-}));
+// Middleware
+app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(express.static(path.join(__dirname, "login page"))); // Serve frontend
+app.use(express.static(path.join(__dirname, "login page")));
 
-// Prevent caching
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store');
   next();
 });
 
-// Session config
 app.use(session({
   secret: process.env.SESSION_SECRET || "your-secret-key",
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 30, // 30 minutes
-  },
+  cookie: { httpOnly: true, maxAge: 1000 * 60 * 30 }
 }));
 
-// MongoDB connection (Login DB)
+// MongoDB connection
 mongoose.connect(process.env.LOGIN_MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log("Connected to Login MongoDB"))
-  .catch(err => console.error("Login MongoDB connection error:", err));
+  .catch(err => console.error("MongoDB connection error:", err));
 
-// User schema for login system
+// User Schema
 const loginUserSchema = new mongoose.Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
-  adminType: { type: String, enum: ["camp", "enroll"], required: true },
+  adminType: { type: String, enum: ["camp", "enroll"], required: true }
 });
+
 const LoginUser = mongoose.model("LoginUser", loginUserSchema);
 
-// Load login page
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "login page", "login.html"));
-});
+// Routes
 
-// Login route
+// Login
 app.post("/api/login", async (req, res) => {
   const { username, password, adminType } = req.body;
-  if (!username || !password || !adminType) {
-    return res.status(400).json({ message: "Missing credentials or admin type" });
-  }
+  if (!username || !password || !adminType)
+    return res.status(400).json({ message: "Missing fields" });
 
   try {
     const user = await LoginUser.findOne({ username, adminType });
-    if (!user) return res.status(401).json({ message: "Invalid username or admin type" });
+    if (!user) return res.status(401).json({ message: "Invalid user or access" });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: "Incorrect password" });
+    if (!match) return res.status(401).json({ message: "Wrong password" });
 
     res.status(200).json({ message: "Login successful" });
   } catch (err) {
-    console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Logout route
-app.post("/api/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) return res.status(500).json({ message: "Logout failed" });
-    res.clearCookie("connect.sid");
-    res.status(200).json({ message: "Logged out successfully" });
-  });
-});
-
-// Add user route - supports multiple admin types
+// Add user
 app.post("/api/add-user", async (req, res) => {
   let { username, password, adminType } = req.body;
-  if (!username || !password || !adminType) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
+  if (!username || !password || !adminType)
+    return res.status(400).json({ message: "Missing fields" });
 
   if (!Array.isArray(adminType)) adminType = [adminType];
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-
     for (const type of adminType) {
-      const existing = await LoginUser.findOne({ username, adminType: type });
-      if (existing) return res.status(409).json({ message: `User already exists for: ${type}` });
+      const exists = await LoginUser.findOne({ username, adminType: type });
+      if (exists)
+        return res.status(409).json({ message: `User exists for ${type}` });
 
-      const newUser = new LoginUser({ username, password: hashedPassword, adminType: type });
-      await newUser.save();
+      await new LoginUser({ username, password: hashedPassword, adminType: type }).save();
     }
 
-    res.status(201).json({ message: "User(s) added successfully" });
+    res.status(201).json({ message: "User(s) added" });
   } catch (err) {
-    console.error("Add user error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Get all users grouped by username with array of admin types
+// Get users
 app.get("/api/users", async (req, res) => {
   try {
     const users = await LoginUser.find({}, "username adminType -_id");
-
     const grouped = users.reduce((acc, user) => {
       if (!acc[user.username]) acc[user.username] = { username: user.username, adminType: [] };
       acc[user.username].adminType.push(user.adminType);
       return acc;
     }, {});
-
     res.json(Object.values(grouped));
   } catch (err) {
-    console.error("Fetch users error:", err);
     res.status(500).json({ message: "Error fetching users" });
   }
 });
 
-// Delete all adminType entries for a user
-app.delete("/api/users/:username", async (req, res) => {
-  const { username } = req.params;
+// Delete user
+app.delete("/api/users/:username/:adminType", async (req, res) => {
+  const { username, adminType } = req.params;
   try {
-    const result = await LoginUser.deleteMany({ username });
-    if (result.deletedCount === 0) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "User deleted successfully" });
+    const result = await LoginUser.deleteOne({ username, adminType });
+    if (result.deletedCount === 0)
+      return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "User deleted" });
   } catch (err) {
-    console.error("Delete user error:", err);
-    res.status(500).json({ message: "Error deleting user" });
+    res.status(500).json({ message: "Delete error" });
   }
 });
 
-// ✅ Update user: username, password, and adminType (inline edit)
-app.put("/api/update-user", async (req, res) => {
-  const { oldUsername, newUsername, newPassword, newAdminType } = req.body;
-
-  if (!oldUsername || !newUsername || !newAdminType || !Array.isArray(newAdminType)) {
-    return res.status(400).json({ message: "Missing or invalid fields" });
-  }
+// Edit user (inline update username, password, access)
+app.put("/api/users/:username/:adminType", async (req, res) => {
+  const { username, adminType } = req.params;
+  const { newUsername, newPassword, newAdminType } = req.body;
 
   try {
-    // Delete existing records for old username
-    await LoginUser.deleteMany({ username: oldUsername });
+    const user = await LoginUser.findOne({ username, adminType });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    const hashed = newPassword ? await bcrypt.hash(newPassword, 10) : null;
+    if (newUsername) user.username = newUsername;
+    if (newPassword) user.password = await bcrypt.hash(newPassword, 10);
+    if (newAdminType) user.adminType = newAdminType;
 
-    // Re-insert new records with new data
-    for (const type of newAdminType) {
-      const newUser = new LoginUser({
-        username: newUsername,
-        password: hashed || (await LoginUser.findOne({ username: oldUsername, adminType: type }))?.password,
-        adminType: type
-      });
-      await newUser.save();
-    }
-
-    res.status(200).json({ message: "User updated successfully" });
+    await user.save();
+    res.status(200).json({ message: "User updated" });
   } catch (err) {
-    console.error("Update user error:", err);
-    res.status(500).json({ message: "Error updating user" });
+    res.status(500).json({ message: "Update error" });
   }
 });
 
-// Start server
+// Home route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "login page", "login.html"));
+});
+
 app.listen(PORT, () => {
-  console.log(`Login server is running on http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
-
