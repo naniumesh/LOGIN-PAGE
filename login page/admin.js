@@ -374,11 +374,19 @@ function renderAlumni(data){
                 <td>
 
                     <button
-                        onclick='editAlumni(${JSON.stringify(alumni)})'>
-
-                        Edit
-
-                    </button>
+                    onclick='editAlumni(${JSON.stringify(alumni)})'
+                    style="
+                    background:#ff9933;
+                    color:white;
+                    border:none;
+                    padding:8px 14px;
+                    border-radius:8px;
+                    font-weight:600;
+                ">
+                
+                Edit
+                
+                </button>
 
                     <button
                         onclick='deleteAlumni("${alumni._id}")'
@@ -636,3 +644,278 @@ function filterAlumniTable(){
         }
     });
 }
+
+/* =========================================
+   NCC PREMIUM UI EFFECTS
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* =========================================
+       HERO ANIMATION
+    ========================================== */
+
+    const hero = document.querySelector(".hero-section");
+
+    if(hero){
+
+        hero.style.opacity = "0";
+        hero.style.transform = "translateY(30px)";
+
+        setTimeout(() => {
+
+            hero.style.transition = "1s ease";
+
+            hero.style.opacity = "1";
+            hero.style.transform = "translateY(0px)";
+
+        }, 300);
+    }
+
+    /* =========================================
+       BUTTON RIPPLE EFFECT
+    ========================================== */
+
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach(btn => {
+
+        btn.addEventListener("mouseenter", () => {
+
+            btn.style.transform =
+                "translateY(-3px) scale(1.03)";
+        });
+
+        btn.addEventListener("mouseleave", () => {
+
+            btn.style.transform =
+                "translateY(0px) scale(1)";
+        });
+
+    });
+
+    /* =========================================
+       TABLE ROW HOVER GLOW
+    ========================================== */
+
+    const tables =
+        document.querySelectorAll("table tbody tr");
+
+    tables.forEach(row => {
+
+        row.addEventListener("mouseenter", () => {
+
+            row.style.transition = "0.3s ease";
+
+            row.style.boxShadow =
+                "0 0 20px rgba(255,255,255,0.15)";
+        });
+
+        row.addEventListener("mouseleave", () => {
+
+            row.style.boxShadow = "none";
+        });
+
+    });
+
+    /* =========================================
+       LIVE CLOCK
+    ========================================== */
+
+    const clock =
+        document.createElement("div");
+
+    clock.id = "liveClock";
+
+    clock.style.position = "fixed";
+    clock.style.bottom = "20px";
+    clock.style.right = "20px";
+    clock.style.padding = "10px 18px";
+    clock.style.borderRadius = "14px";
+    clock.style.background = "rgba(0,0,0,0.5)";
+    clock.style.backdropFilter = "blur(10px)";
+    clock.style.color = "white";
+    clock.style.fontWeight = "600";
+    clock.style.zIndex = "9999";
+    clock.style.boxShadow =
+        "0 5px 20px rgba(0,0,0,0.3)";
+
+    document.body.appendChild(clock);
+
+    function updateClock(){
+
+        const now = new Date();
+
+        clock.innerHTML =
+            "🕒 " +
+            now.toLocaleTimeString();
+    }
+
+    updateClock();
+
+    setInterval(updateClock, 1000);
+
+    /* =========================================
+       FLOATING PARTICLES
+    ========================================== */
+
+    const bg =
+        document.querySelector(".bg-animation");
+
+    if(bg){
+
+        for(let i = 0; i < 15; i++){
+
+            const particle =
+                document.createElement("span");
+
+            particle.style.position = "absolute";
+
+            particle.style.width =
+                Math.random() * 8 + 4 + "px";
+
+            particle.style.height =
+                particle.style.width;
+
+            particle.style.background =
+                "rgba(255,255,255,0.3)";
+
+            particle.style.borderRadius = "50%";
+
+            particle.style.left =
+                Math.random() * 100 + "%";
+
+            particle.style.top =
+                Math.random() * 100 + "%";
+
+            particle.style.animation =
+                `floatParticle ${
+                    Math.random() * 10 + 8
+                }s linear infinite`;
+
+            bg.appendChild(particle);
+        }
+    }
+
+    /* =========================================
+       PAGE LOADER EFFECT
+    ========================================== */
+
+    const loader =
+        document.createElement("div");
+
+    loader.innerHTML =
+        "🇮🇳 Loading NCC Dashboard...";
+
+    loader.style.position = "fixed";
+    loader.style.inset = "0";
+    loader.style.background =
+        "linear-gradient(180deg,#ff9933,#ffffff,#138808)";
+    loader.style.display = "flex";
+    loader.style.justifyContent = "center";
+    loader.style.alignItems = "center";
+    loader.style.fontSize = "28px";
+    loader.style.fontWeight = "700";
+    loader.style.color = "#000";
+    loader.style.zIndex = "999999";
+
+    document.body.appendChild(loader);
+
+    setTimeout(() => {
+
+        loader.style.transition = "0.8s ease";
+        loader.style.opacity = "0";
+
+        setTimeout(() => {
+
+            loader.remove();
+
+        }, 800);
+
+    }, 1200);
+
+});
+
+/* =========================================
+   FLOATING PARTICLE ANIMATION STYLE
+========================================= */
+
+const particleStyle =
+document.createElement("style");
+
+particleStyle.innerHTML = `
+
+@keyframes floatParticle{
+
+    0%{
+        transform:translateY(0px);
+        opacity:0;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-120px);
+        opacity:0;
+    }
+}
+
+.hero-section{
+
+    margin-top:20px;
+
+    padding:50px 20px;
+
+    border-radius:25px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,0.3);
+
+    text-align:center;
+}
+
+.hero-subtitle{
+
+    margin-top:15px;
+
+    font-size:18px;
+
+    color:#f5f5f5;
+}
+
+.footer{
+
+    margin-top:40px;
+
+    text-align:center;
+
+    padding:20px;
+
+    color:white;
+
+    font-weight:500;
+
+    opacity:0.9;
+}
+
+.bg-animation{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-1;
+}
+
+`;
+
+document.head.appendChild(particleStyle);

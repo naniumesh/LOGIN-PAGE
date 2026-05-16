@@ -1,455 +1,865 @@
-/* Global Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7fa;
-    margin: 20px;
-    color: #333;
-    text-align: center;
-  }
-  
-  h1, h2 {
-    color: #2c3e50;
-    text-align: center;
-  }
-  
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-        /* Logout Button (Top Right) */
-        .logout-container {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-        }
-        .logout-container button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+/* =========================================
+   RESET
+========================================= */
 
-        /* Menu Button (Top Left) */
-        .menu-container {
-            position: absolute;
-            left: 20px;
-            top: 20px;
-        }
-        .menu-container button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: block;
-        }
-        .menu-options {
-            margin-top: 8px;
-            display: none;
-        }
-        .menu-options button {
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: block;
-            margin-bottom: 5px;
-            width: 100%;
-        }
-  
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
+/* =========================================
+   BODY
+========================================= */
 
+body{
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    color:white;
+    padding:20px;
 
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a 0%,
+        #111827 30%,
+        #1e293b 60%,
+        #0b1220 100%
+    );
 
+    background-attachment:fixed;
 
-  /* Toggle Styles */
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 28px;
-  }
-  
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  input:checked + .slider {
-    background-color: #2ecc71;
-  }
-  
-  input:checked + .slider:before {
-    transform: translateX(22px);
-  }
-  
+    position:relative;
+}
 
+/* DARK OVERLAY */
 
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+    z-index:-2;
+}
 
+/* ASHOKA CHAKRA */
 
+body::after{
+    content:"☸";
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:240px;
+    color:rgba(0,0,128,0.05);
+    animation:spin 50s linear infinite;
+    z-index:-1;
+}
 
+/* =========================================
+   PREMIUM GLOW EFFECTS
+========================================= */
 
-  /* Form Group Container */
-  .form-group {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
-    margin: 20px auto;
-    display: inline-block;
-  }
-  
-  .form-group input {
-    padding: 10px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  .form-group button {
-    background-color: #3498db;
-    color: white;
-  }
-  
+.bg-lights{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:-1;
+    pointer-events:none;
+}
 
+.bg-lights::before{
 
+    content:"";
 
+    position:absolute;
 
+    width:450px;
+    height:450px;
 
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,153,51,0.22),
+            transparent 70%
+        );
 
+    top:-120px;
+    left:-120px;
 
+    animation:moveLight1 12s ease infinite;
+}
 
-  /* News Table */
-  #newsTable {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
-    margin: 0 auto 30px;
-  }
-  
-  #newsTable thead {
-    background-color: #2980b9;
-    color: white;
-  }
-  
-  #newsTable th, #newsTable td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
-    text-align: left;
-  }
-  
-  #newsTable tbody tr:hover {
-    background-color: #f9f9f9;
-  }
-  
-  .editable {
-    background-color: #fdfdfd;
-    cursor: text;
-  }
-  
-  .editable:focus {
-    outline: 2px solid #189bff;
-    background-color: #fff;
-  }
-  td input[type="text"] {
-    width: 100%;
-    padding: 4px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .actions button {
-    margin-right: 5px;
-  }  
-  .save {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    margin-left: 5px;
-    cursor: pointer;
-  }
-    
-  
+.bg-lights::after{
 
+    content:"";
 
+    position:absolute;
 
+    width:450px;
+    height:450px;
 
+    background:
+        radial-gradient(
+            circle,
+            rgba(19,136,8,0.22),
+            transparent 70%
+        );
 
+    bottom:-120px;
+    right:-120px;
 
+    animation:moveLight2 14s ease infinite;
+}
 
-  /* Total Registrations */
-  #viewRegistrations, #downloadData {
-    background-color: #27ae60;
-    color: white;
-  }
-  
-  #downloadData {
-    background-color: #8e44ad;
-  }
-  
-  /* Registrations Table */
-  #registrationsTable {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
-    margin: 20px auto;
-  }
-  
-  #registrationsTable thead {
-    background-color: #2c3e50;
-    color: white;
-  }
-  
-  #registrationsTable th, #registrationsTable td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
-    text-align: left;
-  }
-  
-  #registrationsTable tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  /* Remove Button (table actions) */
-  table button {
-    background-color: #e74c3c;
-    color: white;
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-  
-#alumniTable{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes moveLight1{
+
+    0%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(80px,40px);
+    }
+
+    100%{
+        transform:translate(0,0);
+    }
+}
+
+@keyframes moveLight2{
+
+    0%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(-80px,-40px);
+    }
+
+    100%{
+        transform:translate(0,0);
+    }
+}
+
+@keyframes spin{
+
+    from{
+        transform:translate(-50%,-50%) rotate(0deg);
+    }
+
+    to{
+        transform:translate(-50%,-50%) rotate(360deg);
+    }
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* =========================================
+   HERO SECTION
+========================================= */
+
+.hero-section{
+
     margin-top:20px;
-}
 
-#alumniTable th,
-#alumniTable td{
-    border:1px solid #ddd;
-    padding:10px;
+    padding:50px 20px;
+
+    border-radius:25px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,0.3);
+
     text-align:center;
+
+    animation:fadeUp 1s ease;
 }
 
-#alumniTable img{
-    width:80px;
-    height:80px;
-    object-fit:cover;
-    border-radius:8px;
+.hero-section h1{
+
+    font-size:42px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    color:white;
+
+    text-shadow:
+        0 4px 15px rgba(0,0,0,0.4);
 }
 
-/* ================================= */
-/* ALUMNI SEARCH + FILTER */
-/* ================================= */
+.hero-subtitle{
 
-.alumni-filter-container{
+    margin-top:15px;
+
+    font-size:18px;
+
+    color:#f1f1f1;
+}
+
+/* =========================================
+   TOP HEADER
+========================================= */
+
+.top-header{
 
     display:flex;
-    justify-content:center;
+
+    justify-content:space-between;
+
     align-items:center;
-    gap:15px;
-    margin:20px 0;
+
+    margin-bottom:20px;
+
     flex-wrap:wrap;
 }
 
-.alumni-filter-container input,
-.alumni-filter-container select{
+.menu-container,
+.logout-container{
 
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:6px;
-    min-width:220px;
+    position:relative;
+
+    z-index:100;
 }
 
+/* =========================================
+   BUTTONS
+========================================= */
 
-/* MOBILE */
+button,
+.top-btn,
+#viewRegistrations,
+#downloadData,
+.form-group button{
 
-@media screen and (max-width:768px){
+    border:none;
 
-    .alumni-filter-container{
+    outline:none;
 
-        flex-direction:column;
-    }
+    cursor:pointer;
 
-    .alumni-filter-container input,
-    .alumni-filter-container select{
+    padding:12px 22px;
 
-        width:90%;
-    }
+    border-radius:14px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:white;
+
+    transition:0.35s ease;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.3);
 }
 
-/* ================================= */
-/* TOP BUTTONS SIDE BY SIDE */
-/* ================================= */
+/* HOVER */
+
+button:hover{
+
+    transform:translateY(-3px) scale(1.03);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* MENU BUTTON */
+
+.menu-container button{
+
+    background:
+        linear-gradient(
+            45deg,
+            #ff9933,
+            #ff6a00
+        );
+}
+
+/* LOGOUT BUTTON */
+
+.logout-container button{
+
+    background:
+        linear-gradient(
+            45deg,
+            #ff4d4d,
+            #c40000
+        );
+}
+
+/* TOP BUTTONS */
 
 .top-button-container{
 
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     gap:20px;
-    margin:20px 0;
+
+    margin:35px 0;
+
     flex-wrap:wrap;
 }
 
 .top-btn{
 
-    padding:12px 24px;
-    border:none;
-    border-radius:8px;
-    color:white;
-    cursor:pointer;
+    min-width:280px;
+
     font-size:16px;
-    font-weight:600;
 }
+
+/* CAMP BUTTON */
 
 .camp-btn{
 
-    background:#007BFF;
+    background:
+        linear-gradient(
+            45deg,
+            #ff9933,
+            #ffffff,
+            #138808
+        );
+
+    color:black;
 }
+
+/* ALUMNI BUTTON */
 
 .alumni-btn{
 
-    background:#27ae60;
+    background:
+        linear-gradient(
+            45deg,
+            #0f2027,
+            #203a43,
+            #2c5364
+        );
 }
 
+/* =========================================
+   MENU DROPDOWN
+========================================= */
 
-/* MOBILE */
+.menu-options{
+
+    display:none;
+
+    position:absolute;
+
+    top:60px;
+    left:0;
+
+    min-width:230px;
+
+    padding:10px;
+
+    border-radius:15px;
+
+    backdrop-filter:blur(18px);
+
+    background:
+        rgba(0,0,0,0.7);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.4);
+}
+
+.menu-options button{
+
+    width:100%;
+
+    margin:5px 0;
+}
+
+/* =========================================
+   GLASS EFFECT CONTAINERS
+========================================= */
+
+.form-group,
+#newsTable,
+#registrationsTable,
+#alumniTable,
+.toggle-container{
+
+    backdrop-filter:blur(18px);
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.25);
+
+    border-radius:20px;
+}
+
+/* =========================================
+   TOGGLE
+========================================= */
+
+.toggle-container{
+
+    width:fit-content;
+
+    margin:30px auto;
+
+    padding:20px 30px;
+
+    font-size:18px;
+}
+
+.switch{
+
+    position:relative;
+
+    display:inline-block;
+
+    width:55px;
+
+    height:30px;
+
+    margin-left:10px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+
+    position:absolute;
+
+    cursor:pointer;
+
+    inset:0;
+
+    background:#777;
+
+    transition:0.4s;
+
+    border-radius:40px;
+}
+
+.slider:before{
+
+    content:"";
+
+    position:absolute;
+
+    height:22px;
+    width:22px;
+
+    left:4px;
+    bottom:4px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:0.4s;
+}
+
+input:checked + .slider{
+
+    background:#138808;
+}
+
+input:checked + .slider:before{
+
+    transform:translateX(24px);
+}
+
+/* =========================================
+   SECTION CARD
+========================================= */
+
+.section-card{
+
+    margin:30px 0;
+
+    animation:fadeUp 0.8s ease;
+}
+
+/* =========================================
+   HEADINGS
+========================================= */
+
+h2{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    font-size:30px;
+
+    color:white;
+
+    text-shadow:
+        0 2px 10px rgba(0,0,0,0.4);
+}
+
+/* =========================================
+   FORMS
+========================================= */
+
+.form-group{
+
+    max-width:1150px;
+
+    margin:20px auto;
+
+    padding:25px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+/* INPUTS */
+
+.form-group input,
+.form-group select,
+.alumni-filter-container input,
+.alumni-filter-container select{
+
+    padding:14px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,0.92);
+
+    min-width:220px;
+
+    font-size:15px;
+}
+
+/* =========================================
+   TABLES
+========================================= */
+
+#newsTable,
+#registrationsTable,
+#alumniTable{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:25px;
+
+    overflow:hidden;
+}
+
+/* TABLE HEADER */
+
+#newsTable thead,
+#registrationsTable thead,
+#alumniTable thead{
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff9933,
+            #ffffff,
+            #138808
+        );
+
+    color:black;
+}
+
+/* TABLE CELLS */
+
+#newsTable th,
+#newsTable td,
+#registrationsTable th,
+#registrationsTable td,
+#alumniTable th,
+#alumniTable td{
+
+    padding:18px;
+
+    text-align:center;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.12);
+}
+
+/* ROW HOVER */
+
+#newsTable tbody tr:hover,
+#registrationsTable tbody tr:hover,
+#alumniTable tbody tr:hover{
+
+    background:
+        rgba(255,255,255,0.08);
+
+    transition:0.3s ease;
+}
+
+/* TABLE INPUT */
+
+td input[type="text"]{
+
+    width:100%;
+
+    padding:10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,0.9);
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.actions button,
+table button{
+
+    margin:4px;
+}
+
+/* SAVE BUTTON */
+
+.save{
+
+    background:
+        linear-gradient(
+            45deg,
+            #138808,
+            #0c5c04
+        );
+}
+
+/* DELETE BUTTON */
+
+.delete{
+
+    background:
+        linear-gradient(
+            45deg,
+            #d10000,
+            #ff4d4d
+        );
+}
+
+/* =========================================
+   ALUMNI IMAGES
+========================================= */
+
+#alumniTable img{
+
+    width:90px;
+    height:90px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:4px solid white;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.4);
+}
+
+/* =========================================
+   FILTERS
+========================================= */
+
+.alumni-filter-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin:25px 0;
+
+    flex-wrap:wrap;
+}
+
+/* =========================================
+   REGISTRATION BUTTONS
+========================================= */
+
+.registration-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:20px;
+}
+
+/* VIEW BUTTON */
+
+#viewRegistrations{
+
+    background:
+        linear-gradient(
+            45deg,
+            #138808,
+            #0b5d05
+        );
+}
+
+/* DOWNLOAD BUTTON */
+
+#downloadData{
+
+    background:
+        linear-gradient(
+            45deg,
+            #000080,
+            #1b1bb3
+        );
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer{
+
+    margin-top:40px;
+
+    text-align:center;
+
+    padding:20px;
+
+    color:white;
+
+    opacity:0.9;
+
+    font-weight:500;
+}
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
 
 @media screen and (max-width:768px){
 
-    .top-button-container{
-
-        flex-direction:column;
-    }
-
-    .top-btn{
-
-        width:90%;
-    }
-}
-
-/* ================================= */
-/* COMPLETE MOBILE RESPONSIVE DESIGN */
-/* ================================= */
-
-@media screen and (max-width: 768px) {
-
     body{
-        margin:10px;
-        padding:0;
-        overflow-x:hidden;
-    }
-
-    h1{
-        font-size:24px;
-        margin-top:70px;
-    }
-
-    h2{
-        font-size:20px;
-    }
-
-    /* TOP BUTTONS */
-    .top-button-container{
-        flex-direction:column;
-        gap:12px;
-        width:100%;
-    }
-
-    .top-btn{
-        width:100%;
-        font-size:15px;
         padding:12px;
     }
 
-    /* MENU + LOGOUT */
-    .menu-container{
-        position:relative;
-        left:0;
-        top:0;
-        margin-bottom:15px;
-        text-align:left;
+    .hero-section h1{
+        font-size:28px;
     }
 
-    .logout-container{
-        position:relative;
-        right:0;
-        top:0;
-        text-align:right;
-        margin-bottom:15px;
+    h2{
+        font-size:22px;
     }
 
-    .menu-container button,
-    .logout-container button{
-        width:auto;
-        font-size:14px;
+    .top-header{
+
+        flex-direction:row;
+
+        justify-content:space-between;
+
+        gap:10px;
     }
 
-    /* FORM GROUPS */
-    .form-group{
+    .top-button-container{
+
+        flex-direction:column;
+    }
+
+    .top-btn{
+
         width:100%;
-        padding:15px;
-        box-sizing:border-box;
+
+        min-width:unset;
+    }
+
+    .form-group{
+
+        flex-direction:column;
     }
 
     .form-group input,
     .form-group select,
-    .form-group button{
+    .form-group button,
+    .alumni-filter-container input,
+    .alumni-filter-container select{
+
         width:100%;
-        margin:8px 0;
-        box-sizing:border-box;
     }
 
-    /* TOGGLE */
-    .toggle-container{
-        margin:20px 0;
+    .registration-buttons{
+
+        flex-direction:column;
     }
 
-    /* TABLE RESPONSIVE */
+    #viewRegistrations,
+    #downloadData{
+
+        width:100%;
+    }
+
     #newsTable,
     #registrationsTable,
     #alumniTable{
+
         display:block;
+
         overflow-x:auto;
+
         white-space:nowrap;
-        width:100%;
     }
 
     #newsTable th,
@@ -458,93 +868,20 @@ body {
     #registrationsTable td,
     #alumniTable th,
     #alumniTable td{
-        font-size:14px;
-        padding:10px;
-    }
 
-    /* BUTTONS */
-    button{
-        font-size:14px;
-    }
-
-    #viewRegistrations,
-    #downloadData{
-        width:100%;
-        margin:8px 0;
         padding:12px;
-    }
 
-    /* ALUMNI FILTER */
-    .alumni-filter-container{
-        flex-direction:column;
-        width:100%;
-    }
-
-    .alumni-filter-container input,
-    .alumni-filter-container select{
-        width:100%;
-        box-sizing:border-box;
-    }
-
-    /* IMAGES */
-    #alumniTable img{
-        width:60px;
-        height:60px;
-    }
-
-    /* ACTION BUTTONS */
-    .actions button,
-    table button{
-        padding:8px 10px;
-        font-size:13px;
-    }
-
-    /* NEWS INPUTS */
-    #newsText,
-    #newsURL{
-        width:100%;
-    }
-
-}
-
-/* ================================= */
-/* TOP HEADER */
-/* ================================= */
-
-.top-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-}
-
-.menu-container,
-.logout-container{
-    position:relative;
-    top:0;
-    left:0;
-    right:0;
-}
-
-/* MOBILE */
-@media screen and (max-width:768px){
-
-    .top-header{
-        flex-direction:row;
-        justify-content:space-between;
-        align-items:center;
-        gap:10px;
-    }
-
-    .menu-container button,
-    .logout-container button{
-        padding:10px 14px;
         font-size:14px;
+    }
+
+    #alumniTable img{
+
+        width:65px;
+        height:65px;
     }
 
     .menu-options{
-        position:absolute;
-        z-index:1000;
+
+        min-width:200px;
     }
 }

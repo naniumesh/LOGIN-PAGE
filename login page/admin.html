@@ -7,136 +7,280 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <!-- Left Menu Button -->
-        <div class="menu-container">
-          <button id="menuToggle">Main Pages</button>
-          <div class="menu-options" id="menuOptions">
-            <button onclick="window.location.href='https://lpunccwebsite.z29.web.core.windows.net/'">Website Home page</button>
-            <button onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com'">Registration Page</button>
-          </div>
-        </div>
-    <div style="text-align: right; margin-bottom: 10px;">
-        <button onclick="logout()" style="background:#ff4d4d; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;">Logout</button>
-      </div>
+    <div class="bg-lights"></div>
 
-    <!-- NEW BUTTON CENTERED ABOVE THE HEADLINE -->
-    <!-- TOP BUTTONS SIDE BY SIDE -->
+    <!-- =========================================
+         FLOATING PARTICLES
+    ========================================== -->
+
+    <div class="bg-animation">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- =========================================
+         TOP HEADER
+    ========================================== -->
+
+    <div class="top-header">
+
+        <!-- LEFT MENU -->
+
+        <div class="menu-container">
+
+            <button id="menuToggle">
+                ☰ Main Pages
+            </button>
+
+            <div class="menu-options" id="menuOptions">
+
+                <button onclick="window.location.href='https://lpunccwebsite.z29.web.core.windows.net/'">
+
+                    🇮🇳 Website Home Page
+
+                </button>
+
+                <button onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com'">
+
+                    🪖 Registration Page
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- LOGOUT -->
+
+        <div class="logout-container">
+
+            <button onclick="logout()">
+
+                Logout ⮕
+                
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================
+         HERO SECTION
+    ========================================== -->
+
+    <section class="hero-section">
+
+        <div class="hero-overlay">
+
+            <h1>
+                IN LPU-NCC ADMIN CONTROL PANEL
+            </h1>
+
+            <p class="hero-subtitle">
+
+                National Cadet Corps Management Dashboard
+
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- =========================================
+         TOP NAVIGATION BUTTONS
+    ========================================== -->
+
     <div class="top-button-container">
 
         <button
             onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com/admin%20page/admin.html'"
             class="top-btn camp-btn">
-            Camp Register Admin Page
+
+            🏕 Camp Register Admin Page
+
         </button>
-        
+
         <button
             id="updateAlumniBtn"
             onclick="showAlumniPanel()"
             class="top-btn alumni-btn">
-            Update Alumni
+
+            🎖 Update Alumni
+
         </button>
+
     </div>
 
-    <h1>Admin Control Page</h1>
+    <!-- =========================================
+         MAIN ADMIN PANEL
+    ========================================== -->
 
-    <!-- ================================= -->
-    <!-- MAIN ADMIN PANEL -->
-    <!-- ================================= -->
     <div id="mainAdminPanel">
-      <div class="toggle-container">
-        <label for="toggleEnrollment"><b>Enable Enrollment:</b></label>
-        <label class="switch">
-            <input type="checkbox" id="toggleEnrollment">
-            <span class="slider"></span>
-        </label>
-    </div>
 
+        <!-- ENROLLMENT TOGGLE -->
 
-    <!--News code-->
-    <h2>Manage News</h2>
-    <div class="form-group">
-      <input id="newsText" placeholder="News text">
-      <input id="newsURL" placeholder="News URL">
-      <button onclick="addNews()">Add News</button>
-    </div>
-  
-    <table id="newsTable">
-      <thead>
-        <tr>
-          <th>News Text</th>
-          <th>URL</th>
-          <th>Date Added</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="newsTableBody">
-        <!-- News rows go here -->
-      </tbody>
-    </table>    
+        <div class="toggle-container">
 
-    
+            <label for="toggleEnrollment">
 
-    <h2>Total Registrations</h2>
-    <button id="viewRegistrations">View Total Registrations</button>
-    <button id="downloadData">Download Data</button>
+                <b>Enable Enrollment :</b>
 
-    <table id="registrationsTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Registration No</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Remove</th>
-            </tr>
-        </thead>
-        <tbody id="registrationsBody">
-        </tbody>
-    </table>
-    </div>
-    
-    <!-- ================================= -->
-    <!-- ALUMNI PANEL -->
-    <!-- ================================= -->
+            </label>
 
-    <div
-        id="alumniPanel"
-        style="
-            display:none;
-        ">
+            <label class="switch">
 
-        <div
-            style="
-                text-align:center;
-                margin-bottom:20px;
-            ">
+                <input type="checkbox" id="toggleEnrollment">
 
-            <div style="text-align:center; margin-bottom:20px;">
-                
-                <button
-                onclick="hideAlumniPanel()"
-                style="
-                padding:10px 20px;
-                background:#e74c3c;
-                color:white;
-                border:none;
-                border-radius:8px;
-                cursor:pointer;
-                font-size:16px;
-            ">
-            ← Back To Main Page
-            </button>
+                <span class="slider"></span>
+
+            </label>
+
         </div>
 
-        <h2>Manage Alumni</h2>
+        <!-- =========================================
+             NEWS MANAGEMENT
+        ========================================== -->
+
+        <div class="section-card">
+
+            <h2>
+                📰 Manage News
+            </h2>
+
+            <div class="form-group">
+
+                <input
+                    id="newsText"
+                    placeholder="Enter News Text">
+
+                <input
+                    id="newsURL"
+                    placeholder="Enter News URL">
+
+                <button onclick="addNews()">
+
+                    ➕ Add News
+
+                </button>
+
+            </div>
+
+            <table id="newsTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>News Text</th>
+                        <th>URL</th>
+                        <th>Date Added</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="newsTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- =========================================
+             REGISTRATIONS
+        ========================================== -->
+
+        <div class="section-card">
+
+            <h2>
+                👨‍🎓 Total Registrations
+            </h2>
+
+            <div class="registration-buttons">
+
+                <button id="viewRegistrations">
+
+                    👁 View Registrations
+
+                </button>
+
+                <button id="downloadData">
+
+                    ⬇ Download Data
+
+                </button>
+
+            </div>
+
+            <table id="registrationsTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Registration No</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Remove</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="registrationsBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================
+         ALUMNI PANEL
+    ========================================== -->
+
+    <div id="alumniPanel" style="display:none;">
+
+        <!-- BACK BUTTON -->
+
+        <div style="text-align:center; margin-bottom:25px;">
+
+            <button
+                onclick="hideAlumniPanel()"
+                class="top-btn"
+                style="
+                    background:linear-gradient(45deg,#d10000,#ff4d4d);
+                ">
+
+                ← Back To Main Page
+
+            </button>
+
+        </div>
+
+        <!-- TITLE -->
+
+        <h2>
+            🎖 Manage Alumni
+        </h2>
+
+        <!-- FORM -->
 
         <div class="form-group">
 
             <input
                 type="text"
                 id="alumniName"
-                placeholder="Name">
+                placeholder="Enter Name">
 
             <select id="alumniField">
 
@@ -174,20 +318,21 @@
 
             <button onclick="uploadAlumni()">
 
-                Upload Alumni
+                ⬆ Upload Alumni
 
             </button>
 
         </div>
+
+        <!-- FILTERS -->
 
         <div class="alumni-filter-container">
 
             <input
                 type="text"
                 id="alumniSearch"
-                placeholder="Search Name"
-                onkeyup="filterAlumniTable()"
-            >
+                placeholder="🔍 Search Name"
+                onkeyup="filterAlumniTable()">
 
             <select
                 id="alumniFilter"
@@ -213,6 +358,7 @@
 
         </div>
 
+        <!-- TABLE -->
 
         <table id="alumniTable">
 
@@ -237,6 +383,20 @@
         </table>
 
     </div>
-    <script src="admin.js"></script>      
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+
+    <footer class="footer">
+
+        🇮🇳 LOVELY PROFESSIONAL UNIVERSITY NCC ADMIN PALAN CREATED BY MALLEMKONDU UMESH
+
+    </footer>
+
+    <!-- SCRIPT -->
+
+    <script src="admin.js"></script>
+
 </body>
 </html>
