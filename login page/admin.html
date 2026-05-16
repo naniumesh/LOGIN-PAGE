@@ -96,6 +96,13 @@
     <div class="top-button-container">
 
         <button
+        id="manageSliderBtn"
+        onclick="showSliderPanel()"
+        class="top-btn camp-btn">
+        🖼 Manage News Slider
+        </button>
+
+        <button
             onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com/admin%20page/admin.html'"
             class="top-btn camp-btn">
 
@@ -383,6 +390,61 @@
         </table>
 
     </div>
+
+    <!-- =========================================
+     NEWS SLIDER PANEL
+========================================= -->
+
+<div id="sliderPanel" style="display:none;">
+
+    <!-- BACK BUTTON -->
+
+    <div style="text-align:center; margin-bottom:25px;">
+
+        <button
+            onclick="hideSliderPanel()"
+            class="top-btn"
+            style="
+                background:linear-gradient(45deg,#d10000,#ff4d4d);
+            ">
+
+            ← Back To Main Page
+
+        </button>
+
+    </div>
+
+    <!-- TITLE -->
+
+    <h2>
+        🖼 Manage News Slider
+    </h2>
+
+    <!-- UPLOAD FORM -->
+
+    <div class="form-group">
+
+        <input
+            type="file"
+            id="sliderImage">
+
+        <button onclick="uploadSliderImage()">
+
+            ⬆ Upload Slider Image
+
+        </button>
+
+    </div>
+
+    <!-- IMAGE LIST -->
+
+    <div
+        id="sliderImagesContainer"
+        class="image-list">
+
+    </div>
+
+</div>
 
     <!-- =========================================
          FOOTER

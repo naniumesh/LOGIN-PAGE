@@ -885,3 +885,139 @@ table button{
         min-width:200px;
     }
 }
+
+.image-list{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(260px,1fr));
+
+    gap:25px;
+
+    margin-top:30px;
+}
+
+.slider-image-card{
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border:
+        1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.25);
+
+    transition:0.35s ease;
+}
+
+.slider-image-card:hover{
+
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,0.35);
+}
+
+.slider-image-card img{
+
+    width:100%;
+
+    height:240px;
+
+    object-fit:contain;
+
+    background:black;
+}
+
+.slider-image-actions{
+
+    padding:15px;
+
+    text-align:center;
+}
+
+.slider-delete-btn{
+
+    background:
+        linear-gradient(
+            45deg,
+            #d10000,
+            #ff4d4d
+        );
+
+    color:white;
+
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+/* =========================================
+   SLIDER UPLOAD BUTTONS
+========================================= */
+
+/* UPLOAD BUTTON */
+
+#sliderPanel .form-group button{
+
+    background:
+        linear-gradient(
+            45deg,
+            #000080,
+            #1b1bb3
+        );
+
+    color:white;
+}
+
+/* FILE INPUT BUTTON */
+
+#sliderImage::file-selector-button{
+
+    background:
+        linear-gradient(
+            45deg,
+            #ff9933,
+            #ff6a00
+        );
+
+    color:white;
+
+    border:none;
+
+    padding:12px 18px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    margin-right:12px;
+
+    transition:0.3s ease;
+}
+
+/* HOVER EFFECT */
+
+#sliderImage::file-selector-button:hover{
+
+    transform:scale(1.03);
+
+    opacity:0.9;
+}

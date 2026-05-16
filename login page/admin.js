@@ -919,3 +919,208 @@ particleStyle.innerHTML = `
 `;
 
 document.head.appendChild(particleStyle);
+
+
+
+
+
+
+
+// ======================================
+// SHOW/HIDE SLIDER PANEL
+// ======================================
+
+function showSliderPanel(){
+
+    document.getElementById(
+        "mainAdminPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "sliderPanel"
+    ).style.display = "block";
+
+    document.getElementById(
+        "manageSliderBtn"
+    ).style.display = "none";
+
+    document.getElementById(
+        "updateAlumniBtn"
+    ).style.display = "none";
+
+    loadSliderImages();
+}
+
+function hideSliderPanel(){
+
+    document.getElementById(
+        "mainAdminPanel"
+    ).style.display = "block";
+
+    document.getElementById(
+        "sliderPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "manageSliderBtn"
+    ).style.display = "inline-block";
+
+    document.getElementById(
+        "updateAlumniBtn"
+    ).style.display = "inline-block";
+}
+
+// ======================================
+// SLIDER API
+// ======================================
+
+const sliderBackend =
+    "https://news-slider-tf3b.onrender.com";
+
+// LOAD IMAGES
+
+async function loadSliderImages(){
+
+    try{
+
+        const response =
+            await fetch(
+                `${sliderBackend}/images`
+            );
+
+        const data =
+            await response.json();
+
+        renderSliderImages(data);
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+// RENDER IMAGES
+
+function renderSliderImages(images){
+
+    const container =
+        document.getElementById(
+            "sliderImagesContainer"
+        );
+
+    container.innerHTML = "";
+
+    images.reverse().forEach(img => {
+
+        container.innerHTML += `
+
+            <div class="slider-image-card">
+
+                <img src="${img.url}">
+
+                <div class="slider-image-actions">
+
+                    <button
+                    class="slider-delete-btn"
+                    onclick="deleteSliderImage('${img.id}')">
+
+                        Delete Image
+
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+    });
+}
+
+// UPLOAD IMAGE
+
+async function uploadSliderImage(){
+
+    const image =
+        document.getElementById(
+            "sliderImage"
+        ).files[0];
+
+    if(!image){
+
+        alert("Select image");
+
+        return;
+    }
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "image",
+        image
+    );
+
+    try{
+
+        const response =
+            await fetch(
+
+                `${sliderBackend}/upload`,
+
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if(result.success){
+
+            alert("Image uploaded");
+
+            document.getElementById(
+                "sliderImage"
+            ).value = "";
+
+            loadSliderImages();
+        }
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+// DELETE IMAGE
+
+async function deleteSliderImage(id){
+
+    if(!confirm("Delete image?"))
+        return;
+
+    try{
+
+        const response =
+            await fetch(
+
+                `${sliderBackend}/delete/${id}`,
+
+                {
+                    method:"DELETE"
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if(result.success){
+
+            loadSliderImages();
+        }
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
