@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Page</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Left Menu Button -->
+        <div class="menu-container">
+          <button id="menuToggle">Main Pages</button>
+          <div class="menu-options" id="menuOptions">
+            <button onclick="window.location.href='https://lpunccwebsite.z29.web.core.windows.net/'">Website Home page</button>
+            <button onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com'">Registration Page</button>
+          </div>
+        </div>
+    <div style="text-align: right; margin-bottom: 10px;">
+        <button onclick="logout()" style="background:#ff4d4d; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;">Logout</button>
+      </div>
+
+    <!-- NEW BUTTON CENTERED ABOVE THE HEADLINE -->
+    <!-- TOP BUTTONS SIDE BY SIDE -->
+    <div class="top-button-container">
+
+        <button
+            onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com/admin%20page/admin.html'"
+            class="top-btn camp-btn">
+            Camp Register Admin Page
+        </button>
+        
+        <button
+            id="updateAlumniBtn"
+            onclick="showAlumniPanel()"
+            class="top-btn alumni-btn">
+            Update Alumni
+        </button>
+    </div>
+
+    <h1>Admin Control Page</h1>
+
+    <!-- ================================= -->
+    <!-- MAIN ADMIN PANEL -->
+    <!-- ================================= -->
+    <div id="mainAdminPanel">
+      <div class="toggle-container">
+        <label for="toggleEnrollment"><b>Enable Enrollment:</b></label>
+        <label class="switch">
+            <input type="checkbox" id="toggleEnrollment">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+
+    <!--News code-->
+    <h2>Manage News</h2>
+    <div class="form-group">
+      <input id="newsText" placeholder="News text">
+      <input id="newsURL" placeholder="News URL">
+      <button onclick="addNews()">Add News</button>
+    </div>
+  
+    <table id="newsTable">
+      <thead>
+        <tr>
+          <th>News Text</th>
+          <th>URL</th>
+          <th>Date Added</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="newsTableBody">
+        <!-- News rows go here -->
+      </tbody>
+    </table>    
+
+    
+
+    <h2>Total Registrations</h2>
+    <button id="viewRegistrations">View Total Registrations</button>
+    <button id="downloadData">Download Data</button>
+
+    <table id="registrationsTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Registration No</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody id="registrationsBody">
+        </tbody>
+    </table>
+    </div>
+    
+    <!-- ================================= -->
+    <!-- ALUMNI PANEL -->
+    <!-- ================================= -->
+
+    <div
+        id="alumniPanel"
+        style="
+            display:none;
+        ">
+
+        <div
+            style="
+                text-align:center;
+                margin-bottom:20px;
+            ">
+
+            <div style="text-align:center; margin-bottom:20px;">
+                
+                <button
+                onclick="hideAlumniPanel()"
+                style="
+                padding:10px 20px;
+                background:#e74c3c;
+                color:white;
+                border:none;
+                border-radius:8px;
+                cursor:pointer;
+                font-size:16px;
+            ">
+            ← Back To Main Page
+            </button>
+        </div>
+
+        <h2>Manage Alumni</h2>
+
+        <div class="form-group">
+
+            <input
+                type="text"
+                id="alumniName"
+                placeholder="Name">
+
+            <select id="alumniField">
+
+                <option value="">
+                    Select Field
+                </option>
+
+                <option value="INDIAN ARMY">
+                    INDIAN ARMY
+                </option>
+
+                <option value="INDIAN NAVY">
+                    INDIAN NAVY
+                </option>
+
+                <option value="INDIAN AIR FORCE">
+                    INDIAN AIR FORCE
+                </option>
+
+            </select>
+
+            <input
+                type="number"
+                id="fromYear"
+                placeholder="From Year">
+
+            <input
+                type="number"
+                id="toYear"
+                placeholder="To Year">
+
+            <input
+                type="file"
+                id="alumniImage">
+
+            <button onclick="uploadAlumni()">
+
+                Upload Alumni
+
+            </button>
+
+        </div>
+
+        <div class="alumni-filter-container">
+
+            <input
+                type="text"
+                id="alumniSearch"
+                placeholder="Search Name"
+                onkeyup="filterAlumniTable()"
+            >
+
+            <select
+                id="alumniFilter"
+                onchange="filterAlumniTable()">
+
+                <option value="">
+                    All Fields
+                </option>
+
+                <option value="INDIAN ARMY">
+                    INDIAN ARMY
+                </option>
+
+                <option value="INDIAN NAVY">
+                    INDIAN NAVY
+                </option>
+
+                <option value="INDIAN AIR FORCE">
+                    INDIAN AIR FORCE
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <table id="alumniTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Field</th>
+                    <th>Batch</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="alumniTableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+    <script src="admin.js"></script>      
+</body>
+</html>
