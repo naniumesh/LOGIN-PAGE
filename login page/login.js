@@ -38,7 +38,7 @@ async function login() {
       if (adminType === "camp") {
         window.location.href = "admin.html";
       } else if (adminType === "enroll") {
-        window.location.href = "https://adminpage.z29.web.core.windows.net/";
+        window.location.href = "admin.html";
       }
     } else {
       errorMsg.textContent = data.message || "Login failed.";
