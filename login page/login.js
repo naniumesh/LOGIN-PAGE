@@ -36,7 +36,7 @@ async function login() {
       sessionStorage.setItem("username", username);
 
       if (adminType === "camp") {
-        window.location.href = "admin.html";
+        window.location.href = "https://ncc-campregistration-l6f6.onrender.com";
       } else if (adminType === "enroll") {
         window.location.href = "admin.html";
       }
