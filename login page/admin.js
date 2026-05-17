@@ -1198,7 +1198,10 @@ function hideClassPanel(){
 
 async function loadClass(className){
 
-    currentClass = className;
+    document.querySelector(
+        "#classPanel h2"
+    ).innerText =
+    "🎓 Manage ACHIVEMENTS - " + className;
 
     document.getElementById(
         "place"
@@ -1259,7 +1262,7 @@ async function addStudent(){
         document.getElementById("rank").value
     );
 
-    if(currentClass === "1D"){
+    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
         formData.append(
             "place",
@@ -1267,7 +1270,7 @@ async function addStudent(){
         );
     }
 
-    if(currentClass === "SPECIAL"){
+    if(currentClass === "RARE CAMPS"){
 
         formData.append(
             "camp",
@@ -1330,11 +1333,13 @@ function renderStudents(students){
 
     container.innerHTML = "";
 
-    students.forEach((student,index)=>{
+    (students || []).forEach((student,index)=>{
+
+        const studentId = student._id;
 
         let extraField = "";
 
-        if(currentClass === "1D"){
+        if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
             extraField = `
 
@@ -1348,7 +1353,7 @@ function renderStudents(students){
             `;
         }
 
-        if(currentClass === "SPECIAL"){
+        if(currentClass === "RARE CAMPS"){
 
             extraField = `
 
@@ -1364,7 +1369,7 @@ function renderStudents(students){
 
         container.innerHTML += `
 
-            <div class="student-card">
+            <div class="student-card" data-id="${student._id}">
 
                 <img src="${student.image}">
 
@@ -1417,6 +1422,14 @@ function renderStudents(students){
 
 function enableEdit(index){
 
+    const card =
+        document.querySelectorAll(
+            `.student-card`
+        )[index];
+
+    const studentId =
+        card.dataset.id;
+
     // ENABLE INPUTS
 
     document.getElementById(
@@ -1431,7 +1444,7 @@ function enableEdit(index){
         `rank-${index}`
     ).disabled = false;
 
-    if(currentClass === "1D"){
+    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
         const placeField =
             document.getElementById(
@@ -1444,7 +1457,7 @@ function enableEdit(index){
         }
     }
 
-    if(currentClass === "SPECIAL"){
+    if(currentClass === "RARE CAMPS"){
 
         const campField =
             document.getElementById(
@@ -1460,15 +1473,12 @@ function enableEdit(index){
     // BUTTONS
 
     const buttons =
-        document.querySelectorAll(
-            `.student-card`
-        )[index]
-        .querySelector(".admin-btns");
+        card.querySelector(".admin-btns");
 
     buttons.innerHTML = `
 
         <button
-            onclick="updateStudent(${index})"
+            onclick="updateStudent('${studentId}', ${index})"
             style="
                 background:green;
                 color:white;
@@ -1479,7 +1489,7 @@ function enableEdit(index){
         </button>
 
         <button
-            onclick="deleteStudent(${index})"
+            onclick="deleteStudent('${studentId}')"
             style="
                 background:red;
                 color:white;
@@ -1512,7 +1522,7 @@ function cancelEdit(){
 // UPDATE STUDENT
 // ======================================
 
-async function updateStudent(index){
+async function updateStudent(id,index){
 
     const formData = new FormData();
 
@@ -1537,7 +1547,7 @@ async function updateStudent(index){
         ).value
     );
 
-    if(currentClass === "1D"){
+    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
         formData.append(
             "place",
@@ -1547,7 +1557,7 @@ async function updateStudent(index){
         );
     }
 
-    if(currentClass === "SPECIAL"){
+    if(currentClass === "RARE CAMPS"){
 
         formData.append(
             "camp",
@@ -1559,7 +1569,7 @@ async function updateStudent(index){
 
     const res = await fetch(
 
-        `${classBackend}/edit-student/${currentClass}/${index}`,
+        `${classBackend}/edit-student/${id}`,
 
         {
             method:"PUT",
@@ -1579,7 +1589,7 @@ async function updateStudent(index){
 // DELETE STUDENT
 // ======================================
 
-async function deleteStudent(index){
+async function deleteStudent(id){
 
     if(!confirm("Delete student?"))
         return;
@@ -1588,7 +1598,7 @@ async function deleteStudent(index){
 
         await fetch(
 
-            `${classBackend}/delete-student/${currentClass}/${index}`,
+            `${classBackend}/delete-student/${id}`,
 
             {
                 method:"DELETE"
