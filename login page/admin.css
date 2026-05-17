@@ -1349,3 +1349,151 @@ table button{
         grid-column:span 1;
     }
 }
+
+/* =========================================
+   UPLOAD ALUMNI BUTTON
+========================================= */
+
+.upload-alumni-btn{
+
+    background:
+        linear-gradient(
+            135deg,
+            #000428,
+            #004e92
+        ) !important;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+    letter-spacing:0.5px;
+
+    transition:0.35s ease;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* HOVER */
+
+.upload-alumni-btn:hover{
+
+    transform:
+        translateY(-4px)
+        scale(1.03);
+
+    background:
+        linear-gradient(
+            135deg,
+            #005bea,
+            #00c6fb
+        ) !important;
+
+    box-shadow:
+        0 12px 28px rgba(0,0,0,0.35);
+}
+
+/* CLICK */
+
+.upload-alumni-btn:active{
+
+    transform:scale(0.96);
+}
+
+/* =========================================
+   ADD STUDENT BUTTON
+========================================= */
+
+#studentForm button{
+
+    background:
+        linear-gradient(
+            135deg,
+            #138808,
+            #0b5d05
+        );
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    padding:14px 28px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    letter-spacing:0.5px;
+
+    box-shadow:
+        0 8px 22px rgba(0,0,0,0.25);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        opacity 0.35s ease;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+/* HOVER */
+
+#studentForm button:hover{
+
+    transform:
+        translateY(-4px)
+        scale(1.03);
+
+    box-shadow:
+        0 14px 32px rgba(0,0,0,0.35);
+}
+
+/* CLICK */
+
+#studentForm button:active{
+
+    transform:scale(0.96);
+}
+
+/* SHINE EFFECT */
+
+#studentForm button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:-120%;
+
+    width:100%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.5),
+            transparent
+        );
+
+    transition:0.7s ease;
+}
+
+#studentForm button:hover::before{
+
+    left:120%;
+}
