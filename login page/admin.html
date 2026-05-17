@@ -67,7 +67,41 @@
 
     </div>
 
+
     <!-- =========================================
+         TOP NAVIGATION BUTTONS
+    ========================================== -->
+
+    <div id="topNavigationButtons" class="top-button-container">
+
+        <button
+        id="manageSliderBtn"
+        onclick="showSliderPanel()"
+        class="top-btn camp-btn">
+        🖼 Manage News Slider
+        </button>
+
+        <button
+            id="updateAlumniBtn"
+            onclick="showAlumniPanel()"
+            class="top-btn alumni-btn">
+
+            🎖 Update Alumni
+
+        </button>
+
+        <button
+        id="classUpdatesBtn"
+        onclick="showClassPanel()"
+        class="top-btn camp-btn">
+
+        🎓 Class Updates
+
+        </button>
+
+    </div>
+
+        <!-- =========================================
          HERO SECTION
     ========================================== -->
 
@@ -89,37 +123,6 @@
 
     </section>
 
-    <!-- =========================================
-         TOP NAVIGATION BUTTONS
-    ========================================== -->
-
-    <div class="top-button-container">
-
-        <button
-        id="manageSliderBtn"
-        onclick="showSliderPanel()"
-        class="top-btn camp-btn">
-        🖼 Manage News Slider
-        </button>
-
-        <button
-            onclick="window.location.href='https://ncc-campregistration-l6f6.onrender.com/admin%20page/admin.html'"
-            class="top-btn camp-btn">
-
-            🏕 Camp Register Admin Page
-
-        </button>
-
-        <button
-            id="updateAlumniBtn"
-            onclick="showAlumniPanel()"
-            class="top-btn alumni-btn">
-
-            🎖 Update Alumni
-
-        </button>
-
-    </div>
 
     <!-- =========================================
          MAIN ADMIN PANEL
@@ -144,57 +147,6 @@
                 <span class="slider"></span>
 
             </label>
-
-        </div>
-
-        <!-- =========================================
-             NEWS MANAGEMENT
-        ========================================== -->
-
-        <div class="section-card">
-
-            <h2>
-                📰 Manage News
-            </h2>
-
-            <div class="form-group">
-
-                <input
-                    id="newsText"
-                    placeholder="Enter News Text">
-
-                <input
-                    id="newsURL"
-                    placeholder="Enter News URL">
-
-                <button onclick="addNews()">
-
-                    ➕ Add News
-
-                </button>
-
-            </div>
-
-            <table id="newsTable">
-
-                <thead>
-
-                    <tr>
-
-                        <th>News Text</th>
-                        <th>URL</th>
-                        <th>Date Added</th>
-                        <th>Actions</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="newsTableBody">
-
-                </tbody>
-
-            </table>
 
         </div>
 
@@ -416,11 +368,58 @@
 
     <!-- TITLE -->
 
-    <h2>
-        🖼 Manage News Slider
-    </h2>
+        <h2>
+            📰 Manage News
+        </h2>
 
     <!-- UPLOAD FORM -->
+
+    <!-- =========================================
+             NEWS MANAGEMENT
+        ========================================== -->
+
+        <div class="section-card">
+
+            <div class="form-group">
+
+                <input
+                    id="newsText"
+                    placeholder="Enter News Text">
+
+                <input
+                    id="newsURL"
+                    placeholder="Enter News URL">
+
+                <button onclick="addNews()">
+
+                    ➕ Add News
+
+                </button>
+
+            </div>
+
+            <table id="newsTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>News Text</th>
+                        <th>URL</th>
+                        <th>Date Added</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="newsTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     <div class="form-group">
 
@@ -443,6 +442,86 @@
         class="image-list">
 
     </div>
+
+</div>
+<!-- =========================================
+     CLASS MANAGEMENT PANEL
+========================================= -->
+
+<div id="classPanel" style="display:none;">
+
+    <!-- BACK BUTTON -->
+
+    <div style="text-align:center; margin-bottom:25px;">
+
+        <button
+            onclick="hideClassPanel()"
+            class="top-btn"
+            style="
+                background:linear-gradient(45deg,#d10000,#ff4d4d);
+            ">
+
+            ← Back To Main Page
+
+        </button>
+
+    </div>
+
+    <!-- TITLE -->
+
+    <h2>
+        🎓 Manage Classes
+    </h2>
+
+    <!-- CLASS BUTTONS -->
+
+    <div class="top-button-container">
+
+        <button
+            onclick="loadClass('1A')"
+            class="top-btn camp-btn">
+
+            1A CLASS
+
+        </button>
+
+        <button
+            onclick="loadClass('1B')"
+            class="top-btn camp-btn">
+
+            1B CLASS
+
+        </button>
+
+        <button
+            onclick="loadClass('1C')"
+            class="top-btn camp-btn">
+
+            1C CLASS
+
+        </button>
+
+        <button
+            onclick="loadClass('1D')"
+            class="top-btn camp-btn">
+
+            1D CLASS
+
+        </button>
+
+        <button
+            onclick="loadClass('SPECIAL')"
+            class="top-btn alumni-btn">
+
+            SPECIAL CLASS
+
+        </button>
+
+    </div>
+
+    <!-- CLASS STUDENTS -->
+
+    <div id="adminStudents"></div>
 
 </div>
 
