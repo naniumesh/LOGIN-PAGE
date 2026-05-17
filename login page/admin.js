@@ -1142,7 +1142,13 @@ async function deleteSliderImage(id){
 const classBackend =
     "https://camp-img-server.onrender.com";
 
-let currentClass = "1A";
+let currentClass = "REPUBLIC DAY CAMP";
+
+const placeInput =
+document.getElementById("place");
+
+const campInput =
+document.getElementById("camp");
 
 // SHOW PANEL
 
@@ -1168,7 +1174,7 @@ function showClassPanel(){
         "topNavigationButtons"
     ).style.display = "none";
 
-    loadClass("1A");
+    loadClass("REPUBLIC DAY CAMP");
 }
 
 // HIDE PANEL
@@ -1194,6 +1200,28 @@ async function loadClass(className){
 
     currentClass = className;
 
+    document.getElementById(
+        "place"
+    ).style.display = "none";
+
+    document.getElementById(
+        "camp"
+    ).style.display = "none";
+
+    if(className === "YOUTH EXCHANGE PROGRAM"){
+
+        document.getElementById(
+            "place"
+        ).style.display = "block";
+    }
+
+    if(className === "RARE CAMPS"){
+
+        document.getElementById(
+            "camp"
+        ).style.display = "block";
+    }
+
     const response =
         await fetch(
             `${classBackend}/students`
@@ -1205,6 +1233,90 @@ async function loadClass(className){
     renderStudents(
         data[className]
     );
+}
+
+async function addStudent(){
+
+    const formData = new FormData();
+
+    formData.append(
+        "className",
+        currentClass
+    );
+
+    formData.append(
+        "name",
+        document.getElementById("name").value
+    );
+
+    formData.append(
+        "batch",
+        document.getElementById("batch").value
+    );
+
+    formData.append(
+        "rank",
+        document.getElementById("rank").value
+    );
+
+    if(currentClass === "1D"){
+
+        formData.append(
+            "place",
+            document.getElementById("place").value
+        );
+    }
+
+    if(currentClass === "SPECIAL"){
+
+        formData.append(
+            "camp",
+            document.getElementById("camp").value
+        );
+    }
+
+    const image =
+        document.getElementById("image").files[0];
+
+    if(image){
+
+        formData.append(
+            "image",
+            image
+        );
+    }
+
+    try{
+
+        const response =
+            await fetch(
+
+                `${classBackend}/add-student`,
+
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+        const result =
+            await response.json();
+
+        alert(result.message);
+
+        document.getElementById("name").value = "";
+        document.getElementById("batch").value = "";
+        document.getElementById("rank").value = "";
+        document.getElementById("place").value = "";
+        document.getElementById("camp").value = "";
+        document.getElementById("image").value = "";
+
+        loadClass(currentClass);
+
+    }catch(error){
+
+        console.error(error);
+    }
 }
 
 // RENDER STUDENTS
