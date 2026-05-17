@@ -275,12 +275,21 @@ function showAlumniPanel(){
     ).style.display = "none";
 
     document.getElementById(
+        "sliderPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "classPanel"
+    ).style.display = "none";
+
+    document.getElementById(
         "alumniPanel"
     ).style.display = "block";
 
-    // HIDE UPDATE ALUMNI BUTTON
+    // HIDE TOP BUTTONS
+
     document.getElementById(
-        "updateAlumniBtn"
+        "topNavigationButtons"
     ).style.display = "none";
 
     loadAlumni();
@@ -296,10 +305,11 @@ function hideAlumniPanel(){
         "alumniPanel"
     ).style.display = "none";
 
-    // SHOW UPDATE ALUMNI BUTTON AGAIN
+    // SHOW TOP BUTTONS AGAIN
+
     document.getElementById(
-        "updateAlumniBtn"
-    ).style.display = "inline-block";
+        "topNavigationButtons"
+    ).style.display = "flex";
 }
 
 
@@ -937,15 +947,19 @@ function showSliderPanel(){
     ).style.display = "none";
 
     document.getElementById(
+        "alumniPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "classPanel"
+    ).style.display = "none";
+
+    document.getElementById(
         "sliderPanel"
     ).style.display = "block";
 
     document.getElementById(
-        "manageSliderBtn"
-    ).style.display = "none";
-
-    document.getElementById(
-        "updateAlumniBtn"
+        "topNavigationButtons"
     ).style.display = "none";
 
     loadSliderImages();
@@ -962,12 +976,8 @@ function hideSliderPanel(){
     ).style.display = "none";
 
     document.getElementById(
-        "manageSliderBtn"
-    ).style.display = "inline-block";
-
-    document.getElementById(
-        "updateAlumniBtn"
-    ).style.display = "inline-block";
+        "topNavigationButtons"
+    ).style.display = "flex";
 }
 
 // ======================================
@@ -1118,6 +1128,364 @@ async function deleteSliderImage(id){
 
             loadSliderImages();
         }
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+// ======================================
+// CLASS PANEL
+// ======================================
+
+const classBackend =
+    "https://camp-img-server.onrender.com";
+
+let currentClass = "1A";
+
+// SHOW PANEL
+
+function showClassPanel(){
+
+    document.getElementById(
+        "mainAdminPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "alumniPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "sliderPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "classPanel"
+    ).style.display = "block";
+
+    document.getElementById(
+        "topNavigationButtons"
+    ).style.display = "none";
+
+    loadClass("1A");
+}
+
+// HIDE PANEL
+
+function hideClassPanel(){
+
+    document.getElementById(
+        "mainAdminPanel"
+    ).style.display = "block";
+
+    document.getElementById(
+        "classPanel"
+    ).style.display = "none";
+
+    document.getElementById(
+        "topNavigationButtons"
+    ).style.display = "flex";
+}
+
+// LOAD CLASS
+
+async function loadClass(className){
+
+    currentClass = className;
+
+    const response =
+        await fetch(
+            `${classBackend}/students`
+        );
+
+    const data =
+        await response.json();
+
+    renderStudents(
+        data[className]
+    );
+}
+
+// RENDER STUDENTS
+
+function renderStudents(students){
+
+    const container =
+        document.getElementById(
+            "adminStudents"
+        );
+
+    container.innerHTML = "";
+
+    students.forEach((student,index)=>{
+
+        let extraField = "";
+
+        if(currentClass === "1D"){
+
+            extraField = `
+
+                <input
+                    type="text"
+                    id="place-${index}"
+                    value="${student.place || ""}"
+                    disabled
+                >
+
+            `;
+        }
+
+        if(currentClass === "SPECIAL"){
+
+            extraField = `
+
+                <input
+                    type="text"
+                    id="camp-${index}"
+                    value="${student.camp || ""}"
+                    disabled
+                >
+
+            `;
+        }
+
+        container.innerHTML += `
+
+            <div class="student-card">
+
+                <img src="${student.image}">
+
+                <div class="student-content">
+
+                    <input
+                        type="text"
+                        id="name-${index}"
+                        value="${student.name}"
+                        disabled
+                    >
+
+                    <input
+                        type="text"
+                        id="batch-${index}"
+                        value="${student.batch}"
+                        disabled
+                    >
+
+                    <input
+                        type="text"
+                        id="rank-${index}"
+                        value="${student.rank}"
+                        disabled
+                    >
+
+                    ${extraField}
+
+                    <div class="admin-btns">
+                    <button
+                    onclick="enableEdit(${index})"
+                    style="
+                    background:#007bff;
+                    color:blue;
+                    ">
+                    EDIT
+                    </button>
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+}
+
+// ======================================
+// ENABLE EDIT
+// ======================================
+
+function enableEdit(index){
+
+    // ENABLE INPUTS
+
+    document.getElementById(
+        `name-${index}`
+    ).disabled = false;
+
+    document.getElementById(
+        `batch-${index}`
+    ).disabled = false;
+
+    document.getElementById(
+        `rank-${index}`
+    ).disabled = false;
+
+    if(currentClass === "1D"){
+
+        const placeField =
+            document.getElementById(
+                `place-${index}`
+            );
+
+        if(placeField){
+
+            placeField.disabled = false;
+        }
+    }
+
+    if(currentClass === "SPECIAL"){
+
+        const campField =
+            document.getElementById(
+                `camp-${index}`
+            );
+
+        if(campField){
+
+            campField.disabled = false;
+        }
+    }
+
+    // BUTTONS
+
+    const buttons =
+        document.querySelectorAll(
+            `.student-card`
+        )[index]
+        .querySelector(".admin-btns");
+
+    buttons.innerHTML = `
+
+        <button
+            onclick="updateStudent(${index})"
+            style="
+                background:green;
+                color:white;
+            ">
+
+            UPDATE
+
+        </button>
+
+        <button
+            onclick="deleteStudent(${index})"
+            style="
+                background:red;
+                color:white;
+            ">
+
+            DELETE
+
+        </button>
+
+        <button
+            onclick="cancelEdit()"
+            style="
+                background:#555;
+                color:white;
+            ">
+
+            CANCEL
+
+        </button>
+
+    `;
+}
+
+function cancelEdit(){
+
+    loadClass(currentClass);
+}
+
+// ======================================
+// UPDATE STUDENT
+// ======================================
+
+async function updateStudent(index){
+
+    const formData = new FormData();
+
+    formData.append(
+        "name",
+        document.getElementById(
+            `name-${index}`
+        ).value
+    );
+
+    formData.append(
+        "batch",
+        document.getElementById(
+            `batch-${index}`
+        ).value
+    );
+
+    formData.append(
+        "rank",
+        document.getElementById(
+            `rank-${index}`
+        ).value
+    );
+
+    if(currentClass === "1D"){
+
+        formData.append(
+            "place",
+            document.getElementById(
+                `place-${index}`
+            ).value
+        );
+    }
+
+    if(currentClass === "SPECIAL"){
+
+        formData.append(
+            "camp",
+            document.getElementById(
+                `camp-${index}`
+            ).value
+        );
+    }
+
+    const res = await fetch(
+
+        `${classBackend}/edit-student/${currentClass}/${index}`,
+
+        {
+            method:"PUT",
+            body:formData
+        }
+
+    );
+
+    const data = await res.json();
+
+    alert(data.message);
+
+    loadClass(currentClass);
+}
+
+// ======================================
+// DELETE STUDENT
+// ======================================
+
+async function deleteStudent(index){
+
+    if(!confirm("Delete student?"))
+        return;
+
+    try{
+
+        await fetch(
+
+            `${classBackend}/delete-student/${currentClass}/${index}`,
+
+            {
+                method:"DELETE"
+            }
+        );
+
+        alert("Student Deleted");
+
+        loadClass(currentClass);
 
     }catch(error){
 
