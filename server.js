@@ -1,228 +1,147 @@
 const express = require("express");
-
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const cors = require("cors");
-
-const fs = require("fs");
-
-const multer = require("multer");
-
-const cloudinary = require("cloudinary").v2;
-
+const bodyParser = require("body-parser");
+const path = require("path");
+const session = require("express-session");
 require("dotenv").config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// Middleware
+app.use(cors({ origin: true, credentials: true }));
+app.use(bodyParser.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.static(path.join(__dirname, "login page")));
 
-app.use(express.json());
-
-const upload = multer({ dest: "uploads/" });
-
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
 });
 
-const path = require("path");
+app.use(session({
+  secret: process.env.SESSION_SECRET || "your-secret-key",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, maxAge: 1000 * 60 * 30 }
+}));
 
-const FILE = path.join(
-    __dirname,
-    "data/students.json"
-);
+// MongoDB connection
+mongoose.connect(process.env.LOGIN_MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log("Connected to Login MongoDB"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
-app.get("/students", (req,res)=>{
-
-    const data = fs.readFileSync(FILE);
-
-    res.json(JSON.parse(data));
-
+// User Schema
+const loginUserSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+  adminType: { type: String, enum: ["camp", "enroll"], required: true }
 });
 
-app.post("/add-student",
-upload.single("image"),
-async(req,res)=>{
+const LoginUser = mongoose.model("LoginUser", loginUserSchema);
 
-    try{
+// Routes
 
-        const {
-            className,
-            name,
-            batch,
-            rank,
-            place,
-            camp
-        } = req.body;
+// Login
+app.post("/api/login", async (req, res) => {
+  const { username, password, adminType } = req.body;
+  if (!username || !password || !adminType)
+    return res.status(400).json({ message: "Missing fields" });
 
-        let imageUrl = "";
+  try {
+    const user = await LoginUser.findOne({ username, adminType });
+    if (!user) return res.status(401).json({ message: "Invalid user or access" });
 
-        if(req.file){
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(401).json({ message: "Wrong password" });
 
-            const result =
-            await cloudinary.uploader.upload(
-                req.file.path
-            );
+    res.status(200).json({ message: "Login successful" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
-            imageUrl = result.secure_url;
-        }
+// Add user
+app.post("/api/add-user", async (req, res) => {
+  let { username, password, adminType } = req.body;
+  if (!username || !password || !adminType)
+    return res.status(400).json({ message: "Missing fields" });
 
-        const raw =
-        fs.readFileSync(FILE);
+  if (!Array.isArray(adminType)) adminType = [adminType];
 
-        const data = JSON.parse(raw);
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    for (const type of adminType) {
+      const exists = await LoginUser.findOne({ username, adminType: type });
+      if (exists)
+        return res.status(409).json({ message: `User exists for ${type}` });
 
-        const newStudent = {
-            name,
-            batch,
-            rank,
-            image:imageUrl
-        };
-
-        if(className === "1D"){
-            newStudent.place = place;
-        }
-
-        if(className === "SPECIAL"){
-            newStudent.camp = camp;
-        }
-
-        data[className].push(newStudent);
-
-        fs.writeFileSync(
-            FILE,
-            JSON.stringify(data,null,2)
-        );
-
-        res.json({
-            message:"Student Added"
-        });
-
-    }catch(err){
-
-        console.log(err);
-
-        res.status(500).json({
-            error:"Server Error"
-        });
-
+      await new LoginUser({ username, password: hashedPassword, adminType: type }).save();
     }
 
+    res.status(201).json({ message: "User(s) added" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-/* DELETE STUDENT */
-
-app.delete("/delete-student/:className/:index",
-(req,res)=>{
-
-    const { className, index } = req.params;
-
-    const raw = fs.readFileSync(FILE);
-
-    const data = JSON.parse(raw);
-
-    data[className].splice(index,1);
-
-    fs.writeFileSync(
-        FILE,
-        JSON.stringify(data,null,2)
-    );
-
-    res.json({
-        message:"Deleted Successfully"
-    });
-
+// Get users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await LoginUser.find({}, "username adminType -_id");
+    const grouped = users.reduce((acc, user) => {
+      if (!acc[user.username]) acc[user.username] = { username: user.username, adminType: [] };
+      acc[user.username].adminType.push(user.adminType);
+      return acc;
+    }, {});
+    res.json(Object.values(grouped));
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching users" });
+  }
 });
 
-
-/* EDIT STUDENT */
-
-app.put("/edit-student/:className/:index",
-upload.single("image"),
-async(req,res)=>{
-
-    try{
-
-        const {
-            className,
-            index
-        } = req.params;
-
-        const {
-            name,
-            batch,
-            rank,
-            place,
-            camp
-        } = req.body;
-
-        let imageUrl = "";
-
-        if(req.file){
-
-            const result =
-            await cloudinary.uploader.upload(
-                req.file.path
-            );
-
-            imageUrl = result.secure_url;
-        }
-
-        const raw =
-        fs.readFileSync(FILE);
-
-        const data =
-        JSON.parse(raw);
-
-        const updatedStudent = {
-
-            name,
-            batch,
-            rank,
-            image:imageUrl
-        };
-
-        if(className === "1D"){
-
-            updatedStudent.place = place;
-        }
-
-        if(className === "SPECIAL"){
-
-            updatedStudent.camp = camp;
-        }
-
-        if(!imageUrl){
-
-            updatedStudent.image =
-            data[className][index].image;
-        }
-
-        data[className][index] =
-        updatedStudent;
-
-        fs.writeFileSync(
-            FILE,
-            JSON.stringify(data,null,2)
-        );
-
-        res.json({
-            message:"Updated Successfully"
-        });
-
-    }catch(err){
-
-        console.log(err);
-
-        res.status(500).json({
-            error:"Update Error"
-        });
-
-    }
-
+// Delete user
+app.delete("/api/users/:username/:adminType", async (req, res) => {
+  const { username, adminType } = req.params;
+  try {
+    const result = await LoginUser.deleteOne({ username, adminType });
+    if (result.deletedCount === 0)
+      return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete error" });
+  }
 });
 
-app.listen(5000, ()=>{
+// Edit user (inline update username, password, access)
+app.put("/api/users/:username/:adminType", async (req, res) => {
+  const { username, adminType } = req.params;
+  const { newUsername, newPassword, newAdminType } = req.body;
 
-    console.log("Server Running");
+  try {
+    const user = await LoginUser.findOne({ username, adminType });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
+    if (newUsername) user.username = newUsername;
+    if (newPassword) user.password = await bcrypt.hash(newPassword, 10);
+    if (newAdminType) user.adminType = newAdminType;
+
+    await user.save();
+    res.status(200).json({ message: "User updated" });
+  } catch (err) {
+    res.status(500).json({ message: "Update error" });
+  }
+});
+
+// Home route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "login page", "login.html"));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
