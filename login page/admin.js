@@ -1436,11 +1436,20 @@ async function loadClass(className){
     document.getElementById(
         "camp"
     ).style.display = "none";
+    document.getElementById(
+        "tscCamp"
+    ).style.display = "none";
 
     if(className === "YOUTH EXCHANGE PROGRAM"){
 
         document.getElementById(
             "place"
+        ).style.display = "block";
+    }
+    if(className === "TSC, VSC, NSC"){
+
+        document.getElementById(
+            "tscCamp"
         ).style.display = "block";
     }
 
@@ -1522,6 +1531,18 @@ async function addStudent(){
         );
     }
 
+    if(currentClass === "TSC, VSC, NSC"){
+
+        formData.append(
+            "subCamp",
+            toCaps(
+                document.getElementById(
+                    "tscCamp"
+                ).value
+            )
+        );
+    }
+
     const image =
         document.getElementById("image").files[0];
 
@@ -1557,6 +1578,7 @@ async function addStudent(){
         document.getElementById("toBatch").value = "";
 
         document.getElementById("rank").value = "";
+        document.getElementById("tscCamp").value = "";
         document.getElementById("place").value = "";
         document.getElementById("camp").value = "";
         document.getElementById("image").value = "";
@@ -1583,6 +1605,7 @@ function renderStudents(students){
     students.forEach((student,index)=>{
 
         let extraField = "";
+        let tscField = "";
 
         if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
@@ -1621,6 +1644,41 @@ function renderStudents(students){
                     value="${student.camp || ""}"
                     style="display:none;"
                 >
+
+            </div>
+            `;
+        }
+        if(currentClass === "TSC, VSC, NSC"){
+            
+            tscField = `
+            
+            <div>
+            
+                <span id="subcamp-text-${index}">
+                    ${student.subCamp || ""}
+                </span>
+            
+                <select
+                    id="subcamp-${index}"
+                    style="display:none;"
+                >
+
+                <option value="THAL SAINIK CAMP"
+                ${student.subCamp === "THAL SAINIK CAMP" ? "selected" : ""}>
+                THAL SAINIK CAMP
+                </option>
+
+                <option value="VAYU SAINIK CAMP"
+                ${student.subCamp === "VAYU SAINIK CAMP" ? "selected" : ""}>
+                VAYU SAINIK CAMP
+                </option>
+
+                <option value="NAU SAINIK CAMP"
+                ${student.subCamp === "NAU SAINIK CAMP" ? "selected" : ""}>
+                NAU SAINIK CAMP
+                </option>
+
+                </select>
 
             </div>
             `;
@@ -1715,6 +1773,7 @@ function renderStudents(students){
                     </div>
 
                     ${extraField}
+                    ${tscField}
 
                     <!-- BUTTONS -->
 
@@ -1822,6 +1881,27 @@ function enableEdit(index,id){
         if(campInput){
 
             campInput.style.display = "block";
+        }
+    }
+
+    if(currentClass === "TSC, VSC, NSC"){
+
+        const subcampText =
+            document.getElementById(
+                `subcamp-text-${index}`
+            );
+
+        const subcampInput =
+            document.getElementById(
+                `subcamp-${index}`
+            );
+
+        if(subcampText){
+            subcampText.style.display = "none";
+        }
+
+        if(subcampInput){
+            subcampInput.style.display = "block";
         }
     }
 
@@ -1942,6 +2022,18 @@ async function updateStudent(index,id){
             ).value
         )
     );
+    }
+
+    if(currentClass === "TSC, VSC, NSC"){
+
+        formData.append(
+            "subCamp",
+            toCaps(
+                document.getElementById(
+                    `subcamp-${index}`
+                ).value
+            )
+        );
     }
 
     const res = await fetch(
