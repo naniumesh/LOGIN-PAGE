@@ -1649,40 +1649,47 @@ function renderStudents(students){
             `;
         }
         if(currentClass === "TSC, VSC, NSC"){
-            
-            tscField = `
-            
-            <div>
-            
-                <span id="subcamp-text-${index}">
-                    ${student.subCamp || ""}
-                </span>
-            
-                <select
-                    id="subcamp-${index}"
-                    style="display:none;"
-                >
 
-                <option value="THAL SAINIK CAMP"
-                ${student.subCamp === "THAL SAINIK CAMP" ? "selected" : ""}>
-                THAL SAINIK CAMP
-                </option>
+    tscField = `
 
-                <option value="VAYU SAINIK CAMP"
-                ${student.subCamp === "VAYU SAINIK CAMP" ? "selected" : ""}>
-                VAYU SAINIK CAMP
-                </option>
+    <div class="subcamp-box">
 
-                <option value="NAU SAINIK CAMP"
-                ${student.subCamp === "NAU SAINIK CAMP" ? "selected" : ""}>
-                NAU SAINIK CAMP
-                </option>
+        <span
+            id="subcamp-text-${index}"
+            class="subcamp-text"
+        >
 
-                </select>
+            CAMP:
+            ${student.subCamp || ""}
 
-            </div>
-            `;
-        }
+        </span>
+
+        <select
+            id="subcamp-${index}"
+            class="subcamp-select"
+            style="display:none;"
+        >
+
+            <option value="THAL SAINIK CAMP"
+            ${student.subCamp === "THAL SAINIK CAMP" ? "selected" : ""}>
+            THAL SAINIK CAMP
+            </option>
+
+            <option value="VAYU SAINIK CAMP"
+            ${student.subCamp === "VAYU SAINIK CAMP" ? "selected" : ""}>
+            VAYU SAINIK CAMP
+            </option>
+
+            <option value="NAU SAINIK CAMP"
+            ${student.subCamp === "NAU SAINIK CAMP" ? "selected" : ""}>
+            NAU SAINIK CAMP
+            </option>
+
+        </select>
+
+    </div>
+    `;
+}
 
         const years =
             student.batch.includes("-")
