@@ -1578,3 +1578,70 @@ input[type="file"]::file-selector-button:hover{
 
     opacity:0.92;
 }
+
+/* =========================================
+   TSC CAMP DESIGN
+========================================= */
+
+.subcamp-box{
+
+    margin-top:8px;
+}
+
+.subcamp-text{
+
+    display:block;
+
+    padding:10px 14px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,153,51,0.25),
+            rgba(19,136,8,0.25)
+        );
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    color:white;
+
+    font-weight:700;
+
+    letter-spacing:0.4px;
+
+    text-transform:uppercase;
+}
+
+/* SELECT DESIGN */
+
+.subcamp-select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f3f3f3
+        );
+
+    color:#111;
+
+    font-weight:700;
+
+    margin-top:6px;
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,0.2);
+}
