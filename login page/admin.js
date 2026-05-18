@@ -1546,13 +1546,23 @@ async function addStudent(){
     const image =
         document.getElementById("image").files[0];
 
-    if(image){
-
-        formData.append(
-            "image",
-            image
-        );
-    }
+        if(image){
+            const maxSize =
+            20 * 1024 * 1024;
+            
+            if(image.size > maxSize){
+                
+                alert(
+                    "IMAGE SIZE TOO LARGE.\nMAXIMUM 20MB ALLOWED."
+                );
+                
+                return;
+            }
+            formData.append(
+                "image",
+                image
+            );
+        }
 
     try{
 
@@ -1568,9 +1578,19 @@ async function addStudent(){
             );
 
         const result =
-            await response.json();
-
-        alert(result.message);
+        await response.json();
+        if(!response.ok){
+            
+            alert(
+                result.error ||
+                "UPLOAD FAILED"
+            );
+            return;
+        }
+        alert(
+            result.message ||
+            "Student Added Successfully"
+        );
 
         document.getElementById("name").value = "";
 
@@ -1700,7 +1720,17 @@ function renderStudents(students){
 
             <div class="student-card">
 
-                <img src="${student.image}">
+                <img 
+                src="${student.image}"
+                id="student-preview-${index}"
+                >
+                
+                <input
+                type="file"
+                id="student-image-${index}"
+                accept="image/*"
+                style="display:none;"
+                >
 
                 <div class="student-content">
 
@@ -1812,6 +1842,14 @@ function renderStudents(students){
 // ======================================
 
 function enableEdit(index,id){
+    
+    document.getElementById(
+        `student-preview-${index}`
+    ).onclick = () => {
+        document.getElementById(
+            `student-image-${index}`
+        ).click();
+    }
 
     // HIDE TEXT
 
@@ -2040,6 +2078,18 @@ async function updateStudent(index,id){
                     `subcamp-${index}`
                 ).value
             )
+        );
+    }
+
+    const imageFile =
+        document.getElementById(
+            `student-image-${index}`
+        ).files[0];
+    
+        if(imageFile){
+            formData.append(
+            "image",
+            imageFile
         );
     }
 
