@@ -470,8 +470,8 @@
 
     <!-- TITLE -->
 
-    <h2>
-        🎓 Manage Classes
+    <h2 id="classTitle">
+    🎓 Select A Camp
     </h2>
 
     <!-- CLASS BUTTONS -->
@@ -482,7 +482,7 @@
             onclick="loadClass('REPUBLIC DAY CAMP')"
             class="top-btn camp-btn">
 
-            REPBLIC DAY CAMP
+            REPUBLIC DAY CAMP
 
         </button>
 
@@ -514,13 +514,17 @@
             onclick="loadClass('RARE CAMPS')"
             class="top-btn alumni-btn">
 
-            RARE CAMPSS
+            RARE CAMPS
 
         </button>
 
     </div>
 
-    <div class="form-group" id="studentForm">
+    <div
+    class="form-group"
+    id="studentForm"
+    style="display:none;"
+    >
 
     <input
         type="text"
