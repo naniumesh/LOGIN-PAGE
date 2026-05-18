@@ -320,8 +320,6 @@ function hideAlumniPanel(){
 const alumniBackend =
     "https://main-lpu-ncc.onrender.com";
 
-let editingAlumniId = null;
-
 
 // LOAD ALUMNI
 
@@ -357,56 +355,172 @@ function renderAlumni(data){
 
     tableBody.innerHTML = "";
 
-    data.forEach(alumni => {
+    data.forEach((alumni) => {
 
         tableBody.innerHTML += `
 
-            <tr>
+            <tr id="alumni-row-${alumni._id}">
+
+                <!-- IMAGE -->
 
                 <td>
-                    <img src="${alumni.imageUrl}">
+
+                    <img 
+                        src="${alumni.imageUrl}" 
+                        id="preview-${alumni._id}"
+                        style="
+                            width:90px;
+                            height:90px;
+                            object-fit:cover;
+                            border-radius:50%;
+                            cursor:pointer;
+                        "
+                    >
+
+                    <input
+                        type="file"
+                        id="image-${alumni._id}"
+                        accept="image/*"
+                        style="display:none;"
+                        onchange="previewImage(event,'${alumni._id}')"
+                    >
+
                 </td>
 
-                <td>
-                    ${alumni.name}
-                </td>
+                <!-- NAME -->
 
                 <td>
-                    ${alumni.className}
+
+                    <span id="name-text-${alumni._id}">
+                        ${alumni.name}
+                    </span>
+
+                    <input
+                        type="text"
+                        id="name-${alumni._id}"
+                        value="${alumni.name}"
+                        style="display:none;"
+                    >
+
                 </td>
 
+                <!-- FIELD -->
+
                 <td>
-                    ${alumni.fromYear}
-                    -
-                    ${alumni.toYear}
+
+                    <span id="field-text-${alumni._id}">
+                        ${alumni.className}
+                    </span>
+
+                    <select
+                        id="field-${alumni._id}"
+                        style="display:none;"
+                    >
+
+                        <option value="INDIAN ARMY"
+                        ${alumni.className === "INDIAN ARMY" ? "selected" : ""}>
+                        INDIAN ARMY
+                        </option>
+
+                        <option value="INDIAN NAVY"
+                        ${alumni.className === "INDIAN NAVY" ? "selected" : ""}>
+                        INDIAN NAVY
+                        </option>
+
+                        <option value="INDIAN AIR FORCE"
+                        ${alumni.className === "INDIAN AIR FORCE" ? "selected" : ""}>
+                        INDIAN AIR FORCE
+                        </option>
+
+                    </select>
+
                 </td>
+
+                <!-- BATCH -->
+
+                <td>
+
+                    <span id="batch-text-${alumni._id}">
+                        ${alumni.fromYear} - ${alumni.toYear}
+                    </span>
+
+                    <div
+                        id="batch-inputs-${alumni._id}"
+                        style="display:none;"
+                    >
+
+                        <input
+                            type="number"
+                            id="from-${alumni._id}"
+                            value="${alumni.fromYear}"
+                            style="width:80px;"
+                        >
+
+                        -
+
+                        <input
+                            type="number"
+                            id="to-${alumni._id}"
+                            value="${alumni.toYear}"
+                            style="width:80px;"
+                        >
+
+                    </div>
+
+                </td>
+
+                <!-- ACTIONS -->
 
                 <td>
 
                     <button
-                    onclick='editAlumni(${JSON.stringify(alumni)})'
-                    style="
-                    background:#ff9933;
-                    color:white;
-                    border:none;
-                    padding:8px 14px;
-                    border-radius:8px;
-                    font-weight:600;
-                ">
-                
-                Edit
-                
-                </button>
+                        onclick="enableAlumniEdit('${alumni._id}')"
+                        id="edit-btn-${alumni._id}"
+                        style="
+                            background:#ff9933;
+                            color:white;
+                        "
+                    >
+
+                        Edit
+
+                    </button>
+
+                    <button
+                        onclick="updateAlumni('${alumni._id}')"
+                        id="save-btn-${alumni._id}"
+                        style="
+                            display:none;
+                            background:green;
+                            color:white;
+                        "
+                    >
+
+                        Save
+
+                    </button>
+
+                    <button
+                        onclick="cancelAlumniEdit()"
+                        id="cancel-btn-${alumni._id}"
+                        style="
+                            display:none;
+                            background:#555;
+                            color:white;
+                        "
+                    >
+
+                        Cancel
+
+                    </button>
 
                     <button
                         onclick='deleteAlumni("${alumni._id}")'
                         style="
                             background:red;
                             color:white;
-                            border:none;
-                            padding:5px 10px;
-                            border-radius:5px;
-                        ">
+                        "
+                    >
 
                         Delete
 
@@ -419,6 +533,123 @@ function renderAlumni(data){
     });
 }
 
+function enableAlumniEdit(id){
+
+    // SHOW INPUTS
+
+    document.getElementById(
+        `name-text-${id}`
+    ).style.display = "none";
+
+    document.getElementById(
+        `field-text-${id}`
+    ).style.display = "none";
+
+    document.getElementById(
+        `batch-text-${id}`
+    ).style.display = "none";
+
+    document.getElementById(
+        `name-${id}`
+    ).style.display = "inline-block";
+
+    document.getElementById(
+        `field-${id}`
+    ).style.display = "inline-block";
+
+    document.getElementById(
+        `batch-inputs-${id}`
+    ).style.display = "inline-block";
+
+    // IMAGE CLICK ENABLE
+
+    document.getElementById(
+        `preview-${id}`
+    ).onclick = () => {
+
+        document.getElementById(
+            `image-${id}`
+        ).click();
+    };
+
+    // BUTTONS
+
+    document.getElementById(
+        `edit-btn-${id}`
+    ).style.display = "none";
+
+    document.getElementById(
+        `save-btn-${id}`
+    ).style.display = "inline-block";
+
+    document.getElementById(
+        `cancel-btn-${id}`
+    ).style.display = "inline-block";
+}
+
+function cancelAlumniEdit(){
+
+    loadAlumni();
+}
+
+async function updateAlumni(id){
+
+    const formData = new FormData();
+
+    formData.append(
+        "name",
+        document.getElementById(`name-${id}`).value
+    );
+
+    formData.append(
+        "className",
+        document.getElementById(`field-${id}`).value
+    );
+
+    formData.append(
+        "fromYear",
+        document.getElementById(`from-${id}`).value
+    );
+
+    formData.append(
+        "toYear",
+        document.getElementById(`to-${id}`).value
+    );
+
+    const imageFile =
+        document.getElementById(`image-${id}`).files[0];
+
+    if(imageFile){
+
+        formData.append(
+            "image",
+            imageFile
+        );
+    }
+
+    try{
+
+        const response = await fetch(
+
+            `${alumniBackend}/api/alumni/${id}`,
+
+            {
+                method:"PUT",
+                body:formData
+            }
+        );
+
+        const result = await response.json();
+
+        alert(result.message);
+
+        loadAlumni();
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
 
 // UPLOAD
 
@@ -479,25 +710,16 @@ async function uploadAlumni(){
 
     try{
 
-        let url =
-            `${alumniBackend}/api/alumni`;
-
-        let method = "POST";
-
-        if(editingAlumniId){
-
-            url =
-                `${alumniBackend}/api/alumni/${editingAlumniId}`;
-
-            method = "PUT";
-        }
-
         const response =
-            await fetch(url,{
+            await fetch(
 
-                method,
-                body: formData
-            });
+                `${alumniBackend}/api/alumni`,
+
+                {
+                    method:"POST",
+                    body: formData
+                }
+            );
 
         const result =
             await response.json();
@@ -514,34 +736,6 @@ async function uploadAlumni(){
     }
 }
 
-
-// EDIT
-
-function editAlumni(alumni){
-
-    editingAlumniId =
-        alumni._id;
-
-    document.getElementById(
-        "alumniName"
-    ).value =
-        alumni.name;
-
-    document.getElementById(
-        "alumniField"
-    ).value =
-        alumni.className;
-
-    document.getElementById(
-        "fromYear"
-    ).value =
-        alumni.fromYear;
-
-    document.getElementById(
-        "toYear"
-    ).value =
-        alumni.toYear;
-}
 
 
 // DELETE
@@ -628,14 +822,14 @@ function filterAlumniTable(){
     rows.forEach(row => {
 
         const name =
-            row.children[1]
-            .textContent
-            .toLowerCase();
+            row.querySelector(
+                'input[id^="name-"]'
+            ).value.toLowerCase();
 
         const field =
-            row.children[2]
-            .textContent
-            .toLowerCase();
+            row.querySelector(
+                'select[id^="field-"]'
+            ).value.toLowerCase();
 
         const matchSearch =
             name.includes(searchValue);
@@ -644,14 +838,10 @@ function filterAlumniTable(){
             filterValue === "" ||
             field.includes(filterValue);
 
-        if(matchSearch && matchFilter){
-
-            row.style.display = "";
-
-        }else{
-
-            row.style.display = "none";
-        }
+        row.style.display =
+            (matchSearch && matchFilter)
+            ? ""
+            : "none";
     });
 }
 
@@ -1198,10 +1388,7 @@ function hideClassPanel(){
 
 async function loadClass(className){
 
-    document.querySelector(
-        "#classPanel h2"
-    ).innerText =
-    "🎓 Manage ACHIVEMENTS - " + className;
+    currentClass = className;
 
     document.getElementById(
         "place"
@@ -1262,7 +1449,7 @@ async function addStudent(){
         document.getElementById("rank").value
     );
 
-    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
+    if(currentClass === "1D"){
 
         formData.append(
             "place",
@@ -1270,7 +1457,7 @@ async function addStudent(){
         );
     }
 
-    if(currentClass === "RARE CAMPS"){
+    if(currentClass === "SPECIAL"){
 
         formData.append(
             "camp",
@@ -1333,13 +1520,11 @@ function renderStudents(students){
 
     container.innerHTML = "";
 
-    (students || []).forEach((student,index)=>{
-
-        const studentId = student._id;
+    students.forEach((student,index)=>{
 
         let extraField = "";
 
-        if(currentClass === "YOUTH EXCHANGE PROGRAM"){
+        if(currentClass === "1D"){
 
             extraField = `
 
@@ -1353,7 +1538,7 @@ function renderStudents(students){
             `;
         }
 
-        if(currentClass === "RARE CAMPS"){
+        if(currentClass === "SPECIAL"){
 
             extraField = `
 
@@ -1369,7 +1554,7 @@ function renderStudents(students){
 
         container.innerHTML += `
 
-            <div class="student-card" data-id="${student._id}">
+            <div class="student-card">
 
                 <img src="${student.image}">
 
@@ -1422,14 +1607,6 @@ function renderStudents(students){
 
 function enableEdit(index){
 
-    const card =
-        document.querySelectorAll(
-            `.student-card`
-        )[index];
-
-    const studentId =
-        card.dataset.id;
-
     // ENABLE INPUTS
 
     document.getElementById(
@@ -1444,7 +1621,7 @@ function enableEdit(index){
         `rank-${index}`
     ).disabled = false;
 
-    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
+    if(currentClass === "1D"){
 
         const placeField =
             document.getElementById(
@@ -1457,7 +1634,7 @@ function enableEdit(index){
         }
     }
 
-    if(currentClass === "RARE CAMPS"){
+    if(currentClass === "SPECIAL"){
 
         const campField =
             document.getElementById(
@@ -1473,12 +1650,15 @@ function enableEdit(index){
     // BUTTONS
 
     const buttons =
-        card.querySelector(".admin-btns");
+        document.querySelectorAll(
+            `.student-card`
+        )[index]
+        .querySelector(".admin-btns");
 
     buttons.innerHTML = `
 
         <button
-            onclick="updateStudent('${studentId}', ${index})"
+            onclick="updateStudent(${index})"
             style="
                 background:green;
                 color:white;
@@ -1489,7 +1669,7 @@ function enableEdit(index){
         </button>
 
         <button
-            onclick="deleteStudent('${studentId}')"
+            onclick="deleteStudent(${index})"
             style="
                 background:red;
                 color:white;
@@ -1522,7 +1702,7 @@ function cancelEdit(){
 // UPDATE STUDENT
 // ======================================
 
-async function updateStudent(id,index){
+async function updateStudent(index){
 
     const formData = new FormData();
 
@@ -1547,7 +1727,7 @@ async function updateStudent(id,index){
         ).value
     );
 
-    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
+    if(currentClass === "1D"){
 
         formData.append(
             "place",
@@ -1557,7 +1737,7 @@ async function updateStudent(id,index){
         );
     }
 
-    if(currentClass === "RARE CAMPS"){
+    if(currentClass === "SPECIAL"){
 
         formData.append(
             "camp",
@@ -1569,7 +1749,7 @@ async function updateStudent(id,index){
 
     const res = await fetch(
 
-        `${classBackend}/edit-student/${id}`,
+        `${classBackend}/edit-student/${currentClass}/${index}`,
 
         {
             method:"PUT",
@@ -1589,7 +1769,7 @@ async function updateStudent(id,index){
 // DELETE STUDENT
 // ======================================
 
-async function deleteStudent(id){
+async function deleteStudent(index){
 
     if(!confirm("Delete student?"))
         return;
@@ -1598,7 +1778,7 @@ async function deleteStudent(id){
 
         await fetch(
 
-            `${classBackend}/delete-student/${id}`,
+            `${classBackend}/delete-student/${currentClass}/${index}`,
 
             {
                 method:"DELETE"
