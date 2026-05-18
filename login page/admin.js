@@ -1427,7 +1427,7 @@ async function loadClass(className){
     document.getElementById(
         "classTitle"
     ).innerHTML =
-    `🎓 Manage ${className} Achievers`;
+    `🎓 Manage ${className} ACHIEVERS`;
 
     document.getElementById(
         "place"
