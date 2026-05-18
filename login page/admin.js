@@ -1,3 +1,12 @@
+// ======================================
+// CAPITAL LETTER FUNCTION
+// ======================================
+
+function toCaps(text){
+
+    return text.toUpperCase().trim();
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     const toggleEnrollment = document.getElementById("toggleEnrollment");
     const viewRegistrations = document.getElementById("viewRegistrations");
@@ -597,8 +606,10 @@ async function updateAlumni(id){
     const formData = new FormData();
 
     formData.append(
-        "name",
-        document.getElementById(`name-${id}`).value
+    "name",
+    toCaps(
+            document.getElementById(`name-${id}`).value
+        )
     );
 
     formData.append(
@@ -656,9 +667,11 @@ async function updateAlumni(id){
 async function uploadAlumni(){
 
     const name =
+    toCaps(
         document.getElementById(
             "alumniName"
-        ).value;
+        ).value
+    );
 
     const className =
         document.getElementById(
@@ -1436,24 +1449,40 @@ async function addStudent(){
 
     formData.append(
         "name",
-        document.getElementById("name").value
+        toCaps(
+            document.getElementById("name").value
+        )
     );
+
+    const fromBatch =
+    document.getElementById(
+        "fromBatch"
+    ).value;
+
+    const toBatch =
+    document.getElementById(
+        "toBatch"
+    ).value;
 
     formData.append(
         "batch",
-        document.getElementById("batch").value
+        `${fromBatch} - ${toBatch}`
     );
 
     formData.append(
         "rank",
-        document.getElementById("rank").value
+        toCaps(
+            document.getElementById("rank").value
+        )
     );
 
     if(currentClass === "1D"){
 
         formData.append(
             "place",
-            document.getElementById("place").value
+            toCaps(
+                document.getElementById("place").value
+            )
         );
     }
 
@@ -1461,7 +1490,9 @@ async function addStudent(){
 
         formData.append(
             "camp",
-            document.getElementById("camp").value
+            toCaps(
+                document.getElementById("camp").value
+            )
         );
     }
 
@@ -1495,7 +1526,10 @@ async function addStudent(){
         alert(result.message);
 
         document.getElementById("name").value = "";
-        document.getElementById("batch").value = "";
+
+        document.getElementById("fromBatch").value = "";
+        document.getElementById("toBatch").value = "";
+
         document.getElementById("rank").value = "";
         document.getElementById("place").value = "";
         document.getElementById("camp").value = "";
@@ -1524,33 +1558,52 @@ function renderStudents(students){
 
         let extraField = "";
 
-        if(currentClass === "1D"){
+        if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
             extraField = `
+
+            <div>
+
+                <span id="place-text-${index}">
+                    ${student.place || ""}
+                </span>
 
                 <input
                     type="text"
                     id="place-${index}"
                     value="${student.place || ""}"
-                    disabled
+                    style="display:none;"
                 >
 
+            </div>
             `;
         }
 
-        if(currentClass === "SPECIAL"){
+        if(currentClass === "RARE CAMPS"){
 
             extraField = `
+
+            <div>
+
+                <span id="camp-text-${index}">
+                    ${student.camp || ""}
+                </span>
 
                 <input
                     type="text"
                     id="camp-${index}"
                     value="${student.camp || ""}"
-                    disabled
+                    style="display:none;"
                 >
 
+            </div>
             `;
         }
+
+        const years =
+            student.batch.includes("-")
+            ? student.batch.split("-")
+            : [student.batch, student.batch];
 
         container.innerHTML += `
 
@@ -1560,38 +1613,99 @@ function renderStudents(students){
 
                 <div class="student-content">
 
-                    <input
-                        type="text"
-                        id="name-${index}"
-                        value="${student.name}"
-                        disabled
-                    >
+                    <!-- NAME -->
 
-                    <input
-                        type="text"
-                        id="batch-${index}"
-                        value="${student.batch}"
-                        disabled
-                    >
+                    <div>
 
-                    <input
-                        type="text"
-                        id="rank-${index}"
-                        value="${student.rank}"
-                        disabled
-                    >
+                        <span id="name-text-${index}">
+                            ${student.name}
+                        </span>
+
+                        <input
+                            type="text"
+                            id="name-${index}"
+                            value="${student.name}"
+                            style="display:none;"
+                        >
+
+                    </div>
+
+                    <!-- BATCH -->
+
+                    <div>
+
+                        <span id="batch-text-${index}">
+                            ${student.batch}
+                        </span>
+
+                        <div
+                            id="batch-edit-${index}"
+                            style="
+                                display:none;
+                                align-items:center;
+                                gap:8px;
+                            "
+                        >
+
+                            <input
+                                type="number"
+                                id="from-${index}"
+                                value="${years[0].trim()}"
+                            >
+
+                            <span
+                            style="
+                                color:white;
+                                font-weight:bold;
+                            ">
+                                -
+                            </span>
+
+                            <input
+                                type="number"
+                                id="to-${index}"
+                                value="${years[1].trim()}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- RANK -->
+
+                    <div>
+
+                        <span id="rank-text-${index}">
+                            ${student.rank}
+                        </span>
+
+                        <input
+                            type="text"
+                            id="rank-${index}"
+                            value="${student.rank}"
+                            style="display:none;"
+                        >
+
+                    </div>
 
                     ${extraField}
 
+                    <!-- BUTTONS -->
+
                     <div class="admin-btns">
-                    <button
-                    onclick="enableEdit(${index})"
-                    style="
-                    background:#007bff;
-                    color:blue;
-                    ">
-                    EDIT
-                    </button>
+
+                        <button
+                            onclick="enableEdit(${index}, '${student._id}')"
+                            style="
+                                background:#007bff;
+                                color:white;
+                            "
+                        >
+
+                            EDIT
+
+                        </button>
+
                     </div>
 
                 </div>
@@ -1605,45 +1719,83 @@ function renderStudents(students){
 // ENABLE EDIT
 // ======================================
 
-function enableEdit(index){
+function enableEdit(index,id){
 
-    // ENABLE INPUTS
+    // HIDE TEXT
+
+    document.getElementById(
+        `name-text-${index}`
+    ).style.display = "none";
+
+    document.getElementById(
+        `batch-text-${index}`
+    ).style.display = "none";
+
+    document.getElementById(
+        `rank-text-${index}`
+    ).style.display = "none";
+
+    // SHOW INPUTS
 
     document.getElementById(
         `name-${index}`
-    ).disabled = false;
-
-    document.getElementById(
-        `batch-${index}`
-    ).disabled = false;
+    ).style.display = "block";
 
     document.getElementById(
         `rank-${index}`
-    ).disabled = false;
+    ).style.display = "block";
 
-    if(currentClass === "1D"){
+    document.getElementById(
+        `batch-edit-${index}`
+    ).style.display = "flex";
 
-        const placeField =
+    // PLACE FIELD
+
+    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
+
+        const placeText =
+            document.getElementById(
+                `place-text-${index}`
+            );
+
+        const placeInput =
             document.getElementById(
                 `place-${index}`
             );
 
-        if(placeField){
+        if(placeText){
 
-            placeField.disabled = false;
+            placeText.style.display = "none";
+        }
+
+        if(placeInput){
+
+            placeInput.style.display = "block";
         }
     }
 
-    if(currentClass === "SPECIAL"){
+    // CAMP FIELD
 
-        const campField =
+    if(currentClass === "RARE CAMPS"){
+
+        const campText =
+            document.getElementById(
+                `camp-text-${index}`
+            );
+
+        const campInput =
             document.getElementById(
                 `camp-${index}`
             );
 
-        if(campField){
+        if(campText){
 
-            campField.disabled = false;
+            campText.style.display = "none";
+        }
+
+        if(campInput){
+
+            campInput.style.display = "block";
         }
     }
 
@@ -1658,22 +1810,24 @@ function enableEdit(index){
     buttons.innerHTML = `
 
         <button
-            onclick="updateStudent(${index})"
+            onclick="updateStudent(${index}, '${id}')"
             style="
                 background:green;
                 color:white;
-            ">
+            "
+        >
 
             UPDATE
 
         </button>
 
         <button
-            onclick="deleteStudent(${index})"
+            onclick="deleteStudent('${id}')"
             style="
                 background:red;
                 color:white;
-            ">
+            "
+        >
 
             DELETE
 
@@ -1684,7 +1838,8 @@ function enableEdit(index){
             style="
                 background:#555;
                 color:white;
-            ">
+            "
+        >
 
             CANCEL
 
@@ -1702,54 +1857,70 @@ function cancelEdit(){
 // UPDATE STUDENT
 // ======================================
 
-async function updateStudent(index){
+async function updateStudent(index,id){
 
     const formData = new FormData();
 
     formData.append(
         "name",
-        document.getElementById(
-            `name-${index}`
-        ).value
+        toCaps(
+            document.getElementById(
+                `name-${index}`
+            ).value
+        )
     );
+
+    const fromYear =
+    document.getElementById(
+        `from-${index}`
+    ).value;
+
+    const toYear =
+    document.getElementById(
+        `to-${index}`
+    ).value;
 
     formData.append(
         "batch",
-        document.getElementById(
-            `batch-${index}`
-        ).value
+        `${fromYear} - ${toYear}`
     );
 
     formData.append(
         "rank",
-        document.getElementById(
-            `rank-${index}`
-        ).value
+        toCaps(
+            document.getElementById(
+                `rank-${index}`
+            ).value
+        )
     );
 
     if(currentClass === "1D"){
 
         formData.append(
             "place",
-            document.getElementById(
+            toCaps(
+                document.getElementById(
                 `place-${index}`
             ).value
-        );
+        )
+    );
     }
 
     if(currentClass === "SPECIAL"){
 
         formData.append(
             "camp",
+            toCaps(
             document.getElementById(
                 `camp-${index}`
             ).value
-        );
+        )
+    );
     }
 
     const res = await fetch(
 
-        `${classBackend}/edit-student/${currentClass}/${index}`,
+        `${classBackend}/edit-student/${id}`,
 
         {
             method:"PUT",
@@ -1766,26 +1937,52 @@ async function updateStudent(index){
 }
 
 // ======================================
+// FORMAT BATCH YEAR
+// ======================================
+
+function formatBatch(batch){
+
+    batch = batch.trim();
+
+    if(batch.includes("-")){
+
+        const years =
+            batch.split("-");
+
+        if(years.length === 2){
+
+            return `${years[0].trim()} - ${years[1].trim()}`;
+        }
+    }
+
+    return batch;
+}
+
+// ======================================
 // DELETE STUDENT
 // ======================================
 
-async function deleteStudent(index){
+async function deleteStudent(id){
 
     if(!confirm("Delete student?"))
         return;
 
     try{
 
-        await fetch(
+        const response =
+            await fetch(
 
-            `${classBackend}/delete-student/${currentClass}/${index}`,
+                `${classBackend}/delete-student/${id}`,
 
-            {
-                method:"DELETE"
-            }
-        );
+                {
+                    method:"DELETE"
+                }
+            );
 
-        alert("Student Deleted");
+        const data =
+            await response.json();
+
+        alert(data.message);
 
         loadClass(currentClass);
 
