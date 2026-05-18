@@ -1377,7 +1377,24 @@ function showClassPanel(){
         "topNavigationButtons"
     ).style.display = "none";
 
-    loadClass("REPUBLIC DAY CAMP");
+    // RESET TITLE
+
+    document.getElementById(
+        "classTitle"
+    ).innerHTML =
+        "🎓 Select A Camp";
+
+    // HIDE FORM
+
+    document.getElementById(
+        "studentForm"
+    ).style.display = "none";
+
+    // CLEAR STUDENTS
+
+    document.getElementById(
+        "adminStudents"
+    ).innerHTML = "";
 }
 
 // HIDE PANEL
@@ -1401,7 +1418,16 @@ function hideClassPanel(){
 
 async function loadClass(className){
 
+    document.getElementById(
+        "studentForm"
+    ).style.display = "flex";
+
     currentClass = className;
+
+    document.getElementById(
+        "classTitle"
+    ).innerHTML =
+    `🎓 Manage ${className} Achievers`;
 
     document.getElementById(
         "place"
@@ -1476,7 +1502,7 @@ async function addStudent(){
         )
     );
 
-    if(currentClass === "1D"){
+    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
         formData.append(
             "place",
@@ -1486,7 +1512,7 @@ async function addStudent(){
         );
     }
 
-    if(currentClass === "SPECIAL"){
+    if(currentClass === "RARE CAMPS"){
 
         formData.append(
             "camp",
@@ -1894,7 +1920,7 @@ async function updateStudent(index,id){
         )
     );
 
-    if(currentClass === "1D"){
+    if(currentClass === "YOUTH EXCHANGE PROGRAM"){
 
         formData.append(
             "place",
@@ -1906,7 +1932,7 @@ async function updateStudent(index,id){
     );
     }
 
-    if(currentClass === "SPECIAL"){
+    if(currentClass === "RARE CAMPS"){
 
         formData.append(
             "camp",
