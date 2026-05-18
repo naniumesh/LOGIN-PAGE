@@ -1497,3 +1497,84 @@ table button{
 
     left:120%;
 }
+
+/* =========================================
+   FORCE CAPITAL LETTERS
+========================================= */
+
+#alumniTable,
+#adminStudents{
+
+    text-transform:uppercase;
+}
+
+/* =========================================
+   LIVE CAPITAL LETTER INPUT
+========================================= */
+
+#alumniPanel input,
+#alumniPanel select,
+#classPanel input,
+#classPanel select{
+
+    text-transform:uppercase;
+}
+
+/* =========================================
+   FILE INPUT PREMIUM DESIGN
+========================================= */
+
+input[type="file"]{
+
+    background:
+        rgba(255,255,255,0.08);
+
+    color:white;
+
+    padding:10px;
+
+    border-radius:14px;
+
+    border:
+        1px solid rgba(255,255,255,0.2);
+
+    width:100%;
+    max-width:260px;
+}
+
+/* CHOOSE FILE BUTTON */
+
+input[type="file"]::file-selector-button{
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff9933,
+            #ff4d00
+        );
+
+    color:white;
+
+    border:none;
+
+    padding:12px 18px;
+
+    border-radius:10px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    margin-right:12px;
+
+    transition:0.3s ease;
+}
+
+/* HOVER */
+
+input[type="file"]::file-selector-button:hover{
+
+    transform:scale(1.04);
+
+    opacity:0.92;
+}
